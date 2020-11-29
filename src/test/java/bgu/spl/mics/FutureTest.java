@@ -38,7 +38,7 @@ public class FutureTest {
 
     @Test
     public void testGet(){
-        // assertEquals(null,future.get()); // We expect
+        // assertEquals(null,future.get()); // We expect  //fff
        // String str = "someResult";
        // if(!future.isDone())
        // {
