@@ -1,6 +1,9 @@
 package bgu.spl.mics;
 
+import bgu.spl.mics.application.messages.AttackEvent;
 import bgu.spl.mics.application.messages.MockMicroService;
+import bgu.spl.mics.application.messages.TerminateBroadcast;
+import bgu.spl.mics.application.passiveObjects.Attack;
 import bgu.spl.mics.application.services.C3POMicroservice;
 import bgu.spl.mics.application.services.HanSoloMicroservice;
 import bgu.spl.mics.application.services.LeiaMicroservice;
@@ -9,7 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class MessageBusImplTest {
+public class MessageBusImplTest{
 
 
     private MessageBusImpl m1;
@@ -17,15 +20,11 @@ public class MessageBusImplTest {
     @BeforeEach
     void setUp() {
         m1 = MessageBusImpl.GetMessageBus();
-        HanSoloMicroservice h1 = new HanSoloMicroservice();
-        C3POMicroservice m2 = new C3POMicroservice();
     }
 
     @AfterEach
     void tearDown() {
-        m1 = null;
     }
-
 
     @Test
     void testSubscribeEvent() {  //maybe SendEvent is enoght
@@ -37,29 +36,67 @@ public class MessageBusImplTest {
 
     @Test
     void testComplete() {
+        AttackEvent e1 = new AttackEvent();
+        HanSoloMicroservice h1 = new HanSoloMicroservice();
+        Future<AttackEvent> futureOfHanSolo = new Future<>();
 
+        h1.complete(e1,true);
+        assertTrue(futureOfHanSolo.isDone()); //checks if the complete resolved the future value.
+        assertEquals(true , futureOfHanSolo.get()); //checks if the resolved value is the true value result that expected on the complete method
     }
+
 
     @Test
     void testSendBroadcast() {
-        /*
-        subscribeBroadcast(Class<? extends Broadcast> someBroadCastType, m1);
-        subscribeBroadcast(Class<? extends Broadcast> someBroadCastType, m2);
-        sendBroadcast(Broadcast b);
-        Make sure m1 got the broadcast
-        make sure m2 got the broadcast
-        */
+        TerminateBroadcast b = new TerminateBroadcast();
+        LeiaMicroservice l1 = new LeiaMicroservice(new Attack[0]);
+        HanSoloMicroservice h1 = new HanSoloMicroservice();
+        m1.register(h1);
+        h1.subscribeBroadcast(TerminateBroadcast.class , (TerminateBroadcast call) -> { new Callback<TerminateBroadcast>()
+        {
+            @Override
+            public void call(TerminateBroadcast c){}
+        };
+        });
+
+        l1.sendBroadcast(b); // microservice.sendBroadcast is using MessageBus sendBroadcast method so we test the method anyways.
+        try{
+            Message msg = m1.awaitMessage(h1);
+            assertEquals(b,msg);
+        }
+        catch (InterruptedException exception){
+        };
     }
 
+    /* In this test we check the functionally of the methods subscribeEvent and sendevent because implemation microservice.subsribe event and microservice.sendevent
+        calls the message bus subsrivEvent and sendEvent methods
+     */
     @Test
     void testSendEvent() {
+        AttackEvent e = new AttackEvent();
+        LeiaMicroservice l1 = new LeiaMicroservice(new Attack[0]);
+        HanSoloMicroservice h1 = new HanSoloMicroservice();
+        m1.register(h1);
+
+        h1.subscribeEvent(AttackEvent.class , (AttackEvent call) -> { new Callback<AttackEvent>() { // checks the subscribe event.
+            @Override
+            public void call(AttackEvent c){};
+         };
+        });
+
+        l1.sendEvent(e); // microservice.sendEvent is using MessageBus sendEvent method so we test the method anyways.
+        try{
+            Message msg = m1.awaitMessage(h1);
+            assertEquals(msg,e);
+        }
+        catch (InterruptedException exception){
+        };
 
     }
+
 
     @Test
     void testRegister() throws InterruptedException {
-   //     HanSoloMicroservice h1 = new HanSoloMicroservice();
-    //    mb.register(h1);
         HanSoloMicroservice h1 = new HanSoloMicroservice();
 
         try {
@@ -93,8 +130,6 @@ public class MessageBusImplTest {
         catch(InterruptedException i){
             // Success
         };
-
-
 
     }
 
