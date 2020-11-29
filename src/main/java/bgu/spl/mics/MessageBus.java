@@ -38,7 +38,7 @@ public interface MessageBus {
      * @param e      The completed event.
      * @param result The resolved result of the completed event.
      */
-    <T> void complete(Event<T> e, T result);
+    <T> void complete(Event<T> e , T result);
 
     /**
      * Adds the {@link Broadcast} {@code b} to the message queues of all the
@@ -75,7 +75,6 @@ public interface MessageBus {
      * <p>
      * @param m the micro-service to unregister.
      */
-
     void unregister(MicroService m);
 
     /**
@@ -93,7 +92,6 @@ public interface MessageBus {
      * @throws InterruptedException if interrupted while waiting for a message
      *                              to became available.
      */
-
     Message awaitMessage(MicroService m) throws InterruptedException;
     
 }

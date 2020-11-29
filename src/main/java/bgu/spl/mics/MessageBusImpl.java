@@ -1,16 +1,27 @@
 package bgu.spl.mics;
 
-import bgu.spl.mics.application.passiveObjects.Attack;
-import bgu.spl.mics.application.services.LeiaMicroservice;
-
 /**
  * The {@link MessageBusImpl class is the implementation of the MessageBus interface.
  * Write your implementation here!
  * Only private fields and methods can be added to this class.
  */
 public class MessageBusImpl implements MessageBus {
-	
-	
+
+	private static MessageBusImpl instance = null;   //Singelton class
+
+	private MessageBusImpl()
+	{
+
+	}
+
+	public static MessageBusImpl GetMessageBus()
+	{
+		if (instance == null)
+			instance = new MessageBusImpl();
+		return instance;
+	}
+
+
 	@Override
 	public <T> void subscribeEvent(Class<? extends Event<T>> type, MicroService m) {
 		
@@ -23,12 +34,12 @@ public class MessageBusImpl implements MessageBus {
 
 	@Override @SuppressWarnings("unchecked")
 	public <T> void complete(Event<T> e, T result) {
-
+		
 	}
-
 
 	@Override
 	public void sendBroadcast(Broadcast b) {
+		
 	}
 
 	
@@ -50,7 +61,7 @@ public class MessageBusImpl implements MessageBus {
 
 	@Override
 	public Message awaitMessage(MicroService m) throws InterruptedException {
-		//throw new IllegalStateException();
-		return null;
+	throw new IllegalStateException();
+		//return null;
 	}
 }
