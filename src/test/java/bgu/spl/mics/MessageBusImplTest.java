@@ -68,8 +68,8 @@ public class MessageBusImplTest{
         };
     }
 
-    /* In this test we check the functionally of the methods subscribeEvent and sendevent because implemation microservice.subsribe event and microservice.sendevent
-        calls the message bus subsrivEvent and sendEvent methods
+    /* In this test we check the functionally of the methods subscribeEvent and sendEvent because Implementation microservice.subscribe event and microservice.sendevent
+        calls the message bus subscribeEvent and sendEvent methods
      */
     @Test
     void testSendEvent() {
