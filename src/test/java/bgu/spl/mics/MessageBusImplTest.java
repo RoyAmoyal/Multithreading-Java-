@@ -28,7 +28,7 @@ public class MessageBusImplTest{
     }
 
     @Test
-    void testSubscribeEvent() {  //maybe SendEvent is enoght
+    void testSubscribeEvent() {  //maybe SendEvent is enough
     }
 
     @Test
@@ -71,7 +71,7 @@ public class MessageBusImplTest{
             assertEquals(b,msg);
         }
         catch (InterruptedException exception){
-        };
+        }
     }
 
     /* In this test we check the functionally of the methods subscribeEvent and sendEvent because Implementation microservice.subscribe event and microservice.sendevent
@@ -86,7 +86,7 @@ public class MessageBusImplTest{
 
         h1.subscribeEvent(AttackEvent.class , (AttackEvent call) -> { new Callback<AttackEvent>() { // checks the subscribe event.
             @Override
-            public void call(AttackEvent c){};
+            public void call(AttackEvent c){}
          };
         });
 
@@ -96,7 +96,7 @@ public class MessageBusImplTest{
             assertEquals(msg,e);
         }
         catch (InterruptedException exception){
-        };
+        }
 
     }
 
@@ -119,7 +119,7 @@ public class MessageBusImplTest{
         }
         catch(InterruptedException i){
             // Success..
-        };
+        }
 
 
         m1.register(h1);
@@ -135,7 +135,7 @@ public class MessageBusImplTest{
         }
         catch(InterruptedException i){
             // Success
-        };
+        }
 
     }
 
@@ -159,8 +159,6 @@ public class MessageBusImplTest{
            assertNotNull(m);
         }
         catch (InterruptedException i){}
-
-
 
     }
 }
