@@ -6,6 +6,7 @@ import bgu.spl.mics.application.messages.TerminateBroadcast;
 import bgu.spl.mics.application.passiveObjects.Attack;
 import bgu.spl.mics.application.services.C3POMicroservice;
 import bgu.spl.mics.application.services.HanSoloMicroservice;
+import bgu.spl.mics.application.services.LandoMicroservice;
 import bgu.spl.mics.application.services.LeiaMicroservice;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,8 +42,12 @@ public class MessageBusImplTest{
         Future<AttackEvent> futureOfHanSolo = new Future<>();
 
         h1.complete(e1,true);
-        assertTrue(futureOfHanSolo.isDone()); //checks if the complete resolved the future value.
+        assertTrue(futureOfHanSolo.isDone()); //checks if the complete resolved the future value. which is true here
         assertEquals(true , futureOfHanSolo.get()); //checks if the resolved value is the true value result that expected on the complete method
+
+        h1.complete(e1,false);
+        assertTrue(futureOfHanSolo.isDone()); //checks if the complete resolved the future value. which is false here
+        assertEquals(false , futureOfHanSolo.get()); //checks if the resolved value is the false value result that expected on the complete method
     }
 
 
@@ -58,6 +63,7 @@ public class MessageBusImplTest{
             public void call(TerminateBroadcast c){}
         };
         });
+
 
         l1.sendBroadcast(b); // microservice.sendBroadcast is using MessageBus sendBroadcast method so we test the method anyways.
         try{
@@ -139,6 +145,22 @@ public class MessageBusImplTest{
 
     @Test
     void testAwaitMessage() {  // test only the case where there's a message waiting to be fetched, and make sure it is indeed fetched.
+
+
+        HanSoloMicroservice h1 = new HanSoloMicroservice();    //checking the method on AttackEvent
+        AttackEvent e = new AttackEvent();
+        LeiaMicroservice l1 = new LeiaMicroservice(new Attack[0]);
+        m1.register(h1);
+        m1.subscribeEvent(AttackEvent.class , h1);
+        l1.sendEvent(e);                              //ignoring of the result of SendEvent
+
+        try {
+           Message m = m1.awaitMessage(h1);
+           assertNotNull(m);
+        }
+        catch (InterruptedException i){}
+
+
 
     }
 }
