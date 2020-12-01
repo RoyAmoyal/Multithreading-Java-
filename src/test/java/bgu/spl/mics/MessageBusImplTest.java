@@ -153,6 +153,7 @@ public class MessageBusImplTest{
         MockMicroService h1 = new MockMicroService();    //checking the method on AttackEvent
         AttackEvent e = new AttackEvent();
         MockMicroService l1 = new MockMicroService();
+
         m1.register(h1);
        h1.subscribeEvent(AttackEvent.class , (AttackEvent call) -> { new Callback<AttackEvent>() { // checks the subscribe event.
             @Override
