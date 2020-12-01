@@ -60,7 +60,6 @@ public class FutureTest {
         TimeUnit unit2 = DAYS;
 
         assertEquals(null, future.get(timeout,unit));
-   //    assertEquals(future.get(), future.get(timeout2,unit2));
 
         future.resolve("someResult");
 
