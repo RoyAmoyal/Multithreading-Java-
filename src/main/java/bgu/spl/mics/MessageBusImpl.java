@@ -61,7 +61,7 @@ public class MessageBusImpl implements MessageBus {
 
 	@Override
 	public Message awaitMessage(MicroService m) throws InterruptedException {
-	throw new IllegalStateException();
-		//return null;
+
+		return null;
 	}
 }
