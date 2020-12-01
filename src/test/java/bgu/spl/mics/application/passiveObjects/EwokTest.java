@@ -21,7 +21,7 @@ public class EwokTest {
 
 
     @Test
-    void testAcquire() {   //
+    void testAcquire() {
         e1.available = true;
         e1.acquire();
         assertFalse(e1.available); // We expect for acquired Ewok to be unavailable.

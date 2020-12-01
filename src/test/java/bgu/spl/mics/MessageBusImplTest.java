@@ -43,7 +43,7 @@ public class MessageBusImplTest{
         });
         Future<Boolean> f1 = l1.sendEvent(e1);
         h1.complete(e1,true);
-        assertTrue(f1.isDone()); //checks if the complete resolved the future value.
+            assertTrue(f1.isDone());     //checks if the complete resolved the future value.
         assertEquals(true , f1.get()); //checks if the resolved value is the true value result that expected on the complete method
 
     }

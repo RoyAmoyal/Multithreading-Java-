@@ -26,7 +26,7 @@ public class FutureTest {
     }
 
     @AfterEach
-    public void tearDown() {future = null;}
+    public void tearDown() {}
 
     @Test
     public void testResolve(){
@@ -38,14 +38,7 @@ public class FutureTest {
 
     @Test
     public void testGet(){
-        // assertEquals(null,future.get()); // We expect  //fff
-       // String str = "someResult";
-       // if(!future.isDone())
-       // {
-       //     assertFalse(str.equals(future.get()));
-       // }
 
-        assertEquals(future.get(Long.MAX_VALUE, DAYS) , future.get());  //before we set result
         future.resolve("someResult");
         assertEquals(future.get(Long.MAX_VALUE, DAYS) , future.get());
 
@@ -66,8 +59,8 @@ public class FutureTest {
         long timeout2 = Long.MAX_VALUE;
         TimeUnit unit2 = DAYS;
 
-        assertEquals(null, future.get(timeout,unit)); // If the time elapsed we expect the method to return null
-        assertEquals(future.get(), future.get(timeout2,unit2));
+        assertEquals(null, future.get(timeout,unit));
+      //  assertEquals(future.get(), future.get(timeout2,unit2));
 
         future.resolve("someResult");
 

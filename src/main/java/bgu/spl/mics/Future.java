@@ -35,8 +35,8 @@ public class Future<T> {
      * 	       
      */
 	public T get() {
-		while(!isDone){};
-		return result;
+
+		return null;
 	}
 	
 	/**
