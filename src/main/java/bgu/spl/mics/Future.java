@@ -70,12 +70,10 @@ public class Future<T> {
      */
 	public T get(long timeout, TimeUnit unit) {
 
-					// -- First try without threads -- //
-
 					//  -- We can assume that  unit == MilliSecond !! --
 
 		TimeUnit time = TimeUnit.NANOSECONDS; 					   //    Type of time to be converted
-		long gap = time.convert(timeout,TimeUnit.MILLISECONDS);   //gap = (timeout*1,000,000) cuz 1MiliSec = 1 million Nanosec
+		long gap = time.convert(timeout,TimeUnit.MILLISECONDS);   //gap = (timeout*1,000,000) cuz 1MilliSec = 1 million NanoSec
 
 			long start = System.nanoTime();
 			long end = start + gap;

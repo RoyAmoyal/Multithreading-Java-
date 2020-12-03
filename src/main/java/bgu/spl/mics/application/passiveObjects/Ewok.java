@@ -10,9 +10,10 @@ public class Ewok {
 	int serialNumber;
 	boolean available;
 
-	public Ewok ()
+	public Ewok (int s)    // When we create Ewok its should be available
     {
-
+        serialNumber = s;
+        available = true;
     }
 	
   
@@ -20,13 +21,13 @@ public class Ewok {
      * Acquires an Ewok
      */
     public void acquire() {
-		
+		available = false;
     }
 
     /**
      * release an Ewok
      */
     public void release() {
-    	
+        available = true;
     }
 }

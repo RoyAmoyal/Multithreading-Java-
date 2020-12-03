@@ -11,7 +11,7 @@ import java.util.List;
  */
 public class Attack {
     final List<Integer> serials;
-    final int duration;
+    final int duration;   //in MilliSec
 
     /**
      * Constructor.
@@ -20,4 +20,32 @@ public class Attack {
         this.serials = serialNumbers;
         this.duration = duration;
     }
+
+
+    public int getDuration() {
+        return duration;
+    }
+
+
+                            //-- Option one --
+
+    public List<Integer> getSerials()
+    {
+        return serials;
+    }
+
+                       //-- Option two --
+
+    public int getEwokReq()   //we get Serial number to initialize a Ewok
+    {
+        List<Integer> l = serials;
+        int i = serials.get(0);
+        serials.remove(0);
+        return i;
+
+    }
+
+
+
+
 }
