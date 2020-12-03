@@ -1,22 +1,22 @@
 package bgu.spl.mics.application.services;
 
+
 import bgu.spl.mics.MicroService;
 
-import java.util.HashMap;
-
 /**
- * R2D2Microservices is in charge of the handling {@link DeactivationEvent}.
+ * HanSoloMicroservices is in charge of the handling {@link AttackEvents}.
  * This class may not hold references for objects which it is not responsible for:
- * {@link DeactivationEvent}.
+ * {@link AttackEvents}.
  *
  * You can add private fields and public methods to this class.
  * You MAY change constructor signatures and even add new public constructors.
  */
-public class R2D2Microservice extends MicroService {
+public class HanSoloMicroservice extends MicroService {
 
-    public R2D2Microservice(long duration) {
-        super("R2D2");
+    public HanSoloMicroservice() {
+        super("Han");
     }
+
 
     @Override
     protected void initialize() {

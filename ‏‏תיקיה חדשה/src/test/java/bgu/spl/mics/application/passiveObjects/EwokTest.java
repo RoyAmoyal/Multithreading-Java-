@@ -12,8 +12,7 @@ public class EwokTest {
 
     @BeforeEach
     void setUp() {
-        Ewok e1 = new Ewok(14);
-
+        Ewok e1 = new Ewok();
     }
 
     @AfterEach
@@ -30,7 +29,6 @@ public class EwokTest {
 
     @Test
     void testRelease() {
-
         e1.available = false;
         e1.release();
         assertTrue(e1.available);  // We expect for released Ewok to be available.

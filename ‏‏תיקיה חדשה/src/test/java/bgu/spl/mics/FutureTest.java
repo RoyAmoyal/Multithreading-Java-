@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class FutureTest {
 
-    private Future<String> future;
+    private Future<String> future; //ignore this note
 
     @BeforeEach
     public void setUp(){
@@ -39,9 +39,8 @@ public class FutureTest {
     @Test
     public void testGet(){
 
-
         future.resolve("someResult");
-        assertEquals(future.get(99999, MILLISECONDS) , future.get());
+        assertEquals(future.get(Long.MAX_VALUE, DAYS) , future.get());
 
     }
 
@@ -57,8 +56,8 @@ public class FutureTest {
         long timeout = 0;
         TimeUnit unit = MILLISECONDS;
 
-        long timeout2 = 9999999;
-        TimeUnit unit2 = MILLISECONDS;
+        long timeout2 = Long.MAX_VALUE;
+        TimeUnit unit2 = DAYS;
 
         assertEquals(null, future.get(timeout,unit));
 

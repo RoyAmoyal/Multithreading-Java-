@@ -1,8 +1,5 @@
 package bgu.spl.mics;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * The MicroService is an abstract class that any micro-service in the system
  * must extend. The abstract MicroService class is responsible to get and
@@ -21,15 +18,16 @@ import java.util.Map;
  * Only private fields and methods may be added to this class.
  * <p>
  */
-public abstract class MicroService implements Runnable {
-       final private MessageBusImpl messageBuss = MessageBusImpl.GetMessageBus();
-       private HashMap myCallBacksMap;
+public abstract class MicroService implements Runnable { 
+    
+
     /**
      * @param name the micro-service name (used mainly for debugging purposes -
      *             does not have to be unique)
      */
     public MicroService(String name) {
-        myCallBacksMap = new HashMap();
+
+    	
     }
 
     /**
@@ -54,15 +52,7 @@ public abstract class MicroService implements Runnable {
      *                 queue.
      */
     protected final <T, E extends Event<T>> void subscribeEvent(Class<E> type, Callback<E> callback) {
-            System.out.println("The microserivce" + this.toString() +" is already subscribed to that type of events");
-
-        {
-            messageBuss.subscribeEvent(type, this); // The microservice is subscribing to the event
-            myCallBacksMap.put(type, callback);
-            /* Hashmap to get the callback faster when needed.
-               The "keys" of the Hashmap Structure are the types of the event and the callbacks are the values.
-             we only have one callback for each type of event so it makes sense */
-        }
+    	
     }
 
     /**
@@ -86,7 +76,7 @@ public abstract class MicroService implements Runnable {
      *                 queue.
      */
     protected final <B extends Broadcast> void subscribeBroadcast(Class<B> type, Callback<B> callback) {
-    	myCallBacksMap.get(type); // find the right callback for the type of the event
+    	
     }
 
     /**

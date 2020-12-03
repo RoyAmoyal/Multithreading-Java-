@@ -1,7 +1,6 @@
 package bgu.spl.mics;
+
 import java.util.concurrent.TimeUnit;
-
-
 
 /**
  * A Future object represents a promised result - an object that will
@@ -37,9 +36,7 @@ public class Future<T> {
      */
 	public T get() {
 
-		while (!isDone()){}        //return the result when its available
-		return result;
-
+		return null;
 	}
 	
 	/**
@@ -55,7 +52,7 @@ public class Future<T> {
      */
 	public boolean isDone() {
 		return isDone;
-	}
+	} //was null
 	
 	/**
      * retrieves the result the Future object holds if it has been resolved,
@@ -69,19 +66,8 @@ public class Future<T> {
      *         elapsed, return null.
      */
 	public T get(long timeout, TimeUnit unit) {
-
-					//  -- We can assume that  unit == MilliSecond !! --
-
-		TimeUnit time = TimeUnit.NANOSECONDS; 					   //    Type of time to be converted
-		long gap = time.convert(timeout,TimeUnit.MILLISECONDS);   //gap = (timeout*1,000,000) cuz 1MilliSec = 1 million NanoSec
-
-			long start = System.nanoTime();
-			long end = start + gap;
-			while (System.nanoTime() < end)
-				if(isDone())
-					return result;
-
-			return null;
+		
+        return null;
 	}
 
 }
