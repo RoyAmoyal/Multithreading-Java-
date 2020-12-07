@@ -2,6 +2,7 @@ package bgu.spl.mics;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * The MicroService is an abstract class that any micro-service in the system
@@ -22,20 +23,27 @@ import java.util.Map;
  * <p>
  */
 public abstract class MicroService implements Runnable {
-       final private MessageBusImpl messageBuss = MessageBusImpl.GetMessageBus();
-       private HashMap myCallBacksMap;
+       private final String name;
+       private boolean terminate;
+       private final MessageBusImpl messageBuss; // ask students if its suppose to be static or final
+       private final HashMap<Class<? extends Message>,Callback> myCallBacksMap;
+
+
     /**
      * @param name the micro-service name (used mainly for debugging purposes -
      *             does not have to be unique)
      */
     public MicroService(String name) {
-        myCallBacksMap = new HashMap();
+        this.name = name;
+        this.terminate = false;
+        this.messageBuss = MessageBusImpl.GetMessageBus();
+        this.myCallBacksMap = new HashMap();
     }
 
     /**
      * Subscribes to events of type {@code type} with the callback
      * {@code callback}. This means two things:
-     * 1. Subscribe to events in the singleton event-bus using the supplied
+     * 1. Subscribe to events in the singleton message-bus using the supplied
      * {@code type}
      * 2. Store the {@code callback} so that when events of type {@code type}
      * are received it will be called.
@@ -54,21 +62,18 @@ public abstract class MicroService implements Runnable {
      *                 queue.
      */
     protected final <T, E extends Event<T>> void subscribeEvent(Class<E> type, Callback<E> callback) {
-            System.out.println("The microserivce" + this.toString() +" is already subscribed to that type of events");
-
-        {
             messageBuss.subscribeEvent(type, this); // The microservice is subscribing to the event
             myCallBacksMap.put(type, callback);
             /* Hashmap to get the callback faster when needed.
                The "keys" of the Hashmap Structure are the types of the event and the callbacks are the values.
              we only have one callback for each type of event so it makes sense */
-        }
+
     }
 
     /**
      * Subscribes to broadcast message of type {@code type} with the callback
      * {@code callback}. This means two things:
-     * 1. Subscribe to broadcast messages in the singleton event-bus using the
+     * 1. Subscribe to broadcast messages in the singleton messsage-bus using the
      * supplied {@code type}
      * 2. Store the {@code callback} so that when broadcast messages of type
      * {@code type} received it will be called.
@@ -86,8 +91,10 @@ public abstract class MicroService implements Runnable {
      *                 queue.
      */
     protected final <B extends Broadcast> void subscribeBroadcast(Class<B> type, Callback<B> callback) {
-    	myCallBacksMap.get(type); // find the right callback for the type of the event
+        messageBuss.subscribeBroadcast(type,this); //using messageBus sub
+        myCallBacksMap.put(type,callback);
     }
+
 
     /**
      * Sends the event {@code e} using the message-bus and receive a {@link Future<T>}
@@ -102,8 +109,8 @@ public abstract class MicroService implements Runnable {
      * 	       			null in case no micro-service has subscribed to {@code e.getClass()}.
      */
     protected final <T> Future<T> sendEvent(Event<T> e) {
-    	
-        return null; 
+    	Future<T> futureToResolved = messageBuss.sendEvent(e);
+        return futureToResolved; // we have to make sure msgbus.sendevent returns null if no microserivce has subsribed to the the type of the event
     }
 
     /**
@@ -113,7 +120,7 @@ public abstract class MicroService implements Runnable {
      * @param b The broadcast message to send
      */
     protected final void sendBroadcast(Broadcast b) {
-    	
+    	messageBuss.sendBroadcast(b);
     }
 
     /**
@@ -127,7 +134,7 @@ public abstract class MicroService implements Runnable {
      *               {@code e}.
      */
     protected final <T> void complete(Event<T> e, T result) {
-    	
+    	messageBuss.complete(e,result);
     }
 
     /**
@@ -140,7 +147,7 @@ public abstract class MicroService implements Runnable {
      * message.
      */
     protected final void terminate() {
-    	
+    	this.terminate = true;
     }
 
     /**
@@ -148,7 +155,7 @@ public abstract class MicroService implements Runnable {
      *         construction time and is used mainly for debugging purposes.
      */
     public final String getName() {
-        return null;
+        return this.name;
     }
 
     /**
@@ -157,7 +164,6 @@ public abstract class MicroService implements Runnable {
      */
     @Override
     public final void run() {
-    	
     }
 
 }

@@ -1,5 +1,4 @@
 package bgu.spl.mics;
-
 /**
  * The message-bus is a shared object used for communication between
  * micro-services.
@@ -19,6 +18,8 @@ public interface MessageBus {
      * @param m    The subscribing micro-service.
      */
     <T> void subscribeEvent(Class<? extends Event<T>> type, MicroService m);
+
+
 
     /**
      * Subscribes {@code m} to receive {@link Broadcast}s of type {@code type}.
