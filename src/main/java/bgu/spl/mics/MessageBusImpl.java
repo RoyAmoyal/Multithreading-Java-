@@ -1,4 +1,6 @@
 package bgu.spl.mics;
+import bgu.spl.mics.application.messages.AttackEvent;
+
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -12,19 +14,23 @@ import java.util.concurrent.LinkedBlockingDeque;
 public class MessageBusImpl implements MessageBus {
 
 	private static MessageBusImpl instance = null;   //Singelton class
-	private ConcurrentHashMap<MicroService,BlockingQueue<Message>> microServicesMessageQueuesMap;
+	private final ConcurrentHashMap<MicroService,BlockingQueue<Message>> microServicesMessageQueuesMap;
 	/*Hashmaps for the types of the event/broadcasts.
 	 contains a linkedQueue (its a linklist style FIFO) of the microservices
 	*/
-	private ConcurrentHashMap<Class<? extends Event<?>>, ConcurrentLinkedQueue<MicroService>> eventsHashmap;
-	private ConcurrentHashMap<Class<? extends Broadcast> , ConcurrentLinkedQueue<MicroService>> broadcastsHashmap;
-	private ConcurrentHashMap<Future<?> , ConcurrentLinkedQueue<MicroService>> futuresHashmap;
+	// DONT FORGET TO CHECK ABOUT THE LINKEDQUEUE MAYBE WE NEED TO CHANGE IT TO DIFFRENT DATA STRUCTURE AND WITHOUT CONCURRUENT
+	private final ConcurrentHashMap<Class<? extends Event<?>>, ConcurrentLinkedQueue<MicroService>> eventsHashmap;
+	private final ConcurrentHashMap<Class<? extends Broadcast> , ConcurrentLinkedQueue<MicroService>> broadcastsHashmap;
+	private final ConcurrentHashMap<Future<?> , ConcurrentLinkedQueue<MicroService>> futuresHashmap;
 
 
 
 	private MessageBusImpl()
 	{
 		microServicesMessageQueuesMap = new ConcurrentHashMap<>();
+		eventsHashmap = new ConcurrentHashMap<>();
+		broadcastsHashmap = new ConcurrentHashMap<>();
+		futuresHashmap = new ConcurrentHashMap<>();
 	}
 
 
@@ -34,13 +40,17 @@ public class MessageBusImpl implements MessageBus {
 			instance = new MessageBusImpl();
 		return instance;
 	}
-
+	lei.asubsricbeto danceEvent
+	HASHMAPEVENT:
+	AttackEvent, LISTMICROSERVICE: Han - > c3p0
+	terminateevent, listmicroservice: (han -> c3p0 -> r2d2 -> lando -> leia)
+	dance Event, Listmicroservice: Leia, R2D2
 
 	@Override
 	public <T> void subscribeEvent(Class<? extends Event<T>> type, MicroService m) {
-		if(!eventsHashmap.contains(type)) {
+		if(!this.eventsHashmap.containsKey(type)) {
 			ConcurrentLinkedQueue<MicroService> newLinkedQueue = new ConcurrentLinkedQueue<>();
-			eventsHashmap.put(type,newLinkedQueue);
+			this.eventsHashmap.put(type,newLinkedQueue);
 		}
 		ConcurrentLinkedQueue<MicroService> currLinkedQueue = eventsHashmap.get(type);
 		currLinkedQueue.add(m);
@@ -48,7 +58,7 @@ public class MessageBusImpl implements MessageBus {
 
 	@Override
 	public void subscribeBroadcast(Class<? extends Broadcast> type, MicroService m) {
-		if(!broadcastsHashmap.contains(type)) {
+		if(!broadcastsHashmap.containsKey(type)) {
 			ConcurrentLinkedQueue<MicroService> newLinkedQueue = new ConcurrentLinkedQueue<>();
 			broadcastsHashmap.put(type,newLinkedQueue);
 		}
@@ -69,11 +79,11 @@ public class MessageBusImpl implements MessageBus {
 	/* UN FINISHED METHOD WE NEED TO FINISH IT */
 	@Override
 	public <T> Future<T> sendEvent(Event<T> e) {
-		if(!eventsHashmap.contains(e))
+		if(!this.eventsHashmap.contains(e))
 			return null;
-		ConcurrentLinkedQueue<MicroService> currLinkedQueue = eventsHashmap.get(e); // Finds the microservices list that subscribed to the type of this event.
+		ConcurrentLinkedQueue<MicroService> currLinkedQueue = this.eventsHashmap.get(e); // Finds the microservices list that subscribed to the type of this event.
         MicroService currMicroService = currLinkedQueue.poll(); //removes and returns the head of the list (the microservice that should handle the event in the round-robin)
-        BlockingQueue<Message> currMessageQueue = microServicesMessageQueuesMap.get(currMicroService); //Finds the MessageQueue for the microservice that need to handle the event.
+        BlockingQueue<Message> currMessageQueue = this.microServicesMessageQueuesMap.get(currMicroService); //Finds the MessageQueue for the microservice that need to handle the event.
         currMessageQueue.add(e); // Adds the event to the MessageQueue of that microservice to handle it when possible.
 		return null; // ********* need to handle how to return the future.
 	}
