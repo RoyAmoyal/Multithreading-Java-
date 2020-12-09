@@ -5,6 +5,6 @@ package bgu.spl.mics;
  */
 public interface Callback<T> {
 
-    public void call(T c);
+    public void call(T c);  // i guess here is the lambda join instead of creating class that implements this Callback
 
 }

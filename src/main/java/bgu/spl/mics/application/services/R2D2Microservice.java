@@ -3,6 +3,7 @@ package bgu.spl.mics.application.services;
 import bgu.spl.mics.MicroService;
 
 import java.util.HashMap;
+import bgu.spl.mics.application.messages.DeactivationEvent;
 
 /**
  * R2D2Microservices is in charge of the handling {@link DeactivationEvent}.

@@ -15,7 +15,8 @@ import java.util.List;
 public class Ewoks {
 
     private ArrayList<Ewok> ewokObj = new ArrayList<Ewok>();  // collection of ewok objects  (not sure about the syntax)
-    int numberOfEwoks;
+    int numberOfEwoks; // we get it from the json
+
     private static Ewoks instance = null;
 
     private Ewoks()

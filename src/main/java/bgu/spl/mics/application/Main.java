@@ -12,6 +12,11 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+
+
 
 /** This is the Main class of the application. You should parse the input file,
  * create the different components of the application, and run the system.
@@ -22,13 +27,16 @@ public class Main {
 
 
 
+
+
 		Gson gson = new Gson();
-		try (JsonReader reader = new JsonReader(new FileReader("C:\\Users\\קורן\\Desktop\\SPL_Assignment2\\Assignment\\src\\main\\java\\bgu\\spl\\mics\\application\\input.json")))
+		try (JsonReader reader = new JsonReader(new FileReader("C:\\Users\\קורן\\Desktop\\SPL_Assignment2\\Assignment\\src\\main\\java\\bgu\\spl\\mics\\application\\input.json"))) //
 		{
 			{
 				gson.fromJson(reader, Input.class);
 			}
 		}
+
 
 
 

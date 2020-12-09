@@ -40,11 +40,7 @@ public class MessageBusImpl implements MessageBus {
 			instance = new MessageBusImpl();
 		return instance;
 	}
-	lei.asubsricbeto danceEvent
-	HASHMAPEVENT:
-	AttackEvent, LISTMICROSERVICE: Han - > c3p0
-	terminateevent, listmicroservice: (han -> c3p0 -> r2d2 -> lando -> leia)
-	dance Event, Listmicroservice: Leia, R2D2
+
 
 	@Override
 	public <T> void subscribeEvent(Class<? extends Event<T>> type, MicroService m) {

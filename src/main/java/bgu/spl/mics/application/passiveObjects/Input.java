@@ -3,14 +3,12 @@ package bgu.spl.mics.application.passiveObjects;
 public class Input {
 
 
+    protected Attack[] attacks;
+    protected int R2D2;
+    protected int Lando;
+    protected int Ewoks;
 
 
-
-
-    private Attack[] attacks;
-    int R2D2;
-    int Lando;
-    int Ewoks;
 
     public int getEwoks() {
         return Ewoks;
@@ -36,4 +34,6 @@ public class Input {
     public void setAttacks(Attack[] attacks) {
         this.attacks = attacks;
     }
+
+
 }
