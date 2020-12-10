@@ -4,9 +4,9 @@ public class Input {
 
 
     protected Attack[] attacks;
-    protected int R2D2;
-    protected int Lando;
-    protected int Ewoks;
+    private int R2D2;
+    private int Lando;
+    private int Ewoks;
 
 
 

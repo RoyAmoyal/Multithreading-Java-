@@ -13,7 +13,7 @@ import java.util.concurrent.LinkedBlockingDeque;
  */
 public class MessageBusImpl implements MessageBus {
 
-	private static MessageBusImpl instance = null;   //Singelton class
+
 	private final ConcurrentHashMap<MicroService,BlockingQueue<Message>> microServicesMessageQueuesMap;
 	/*Hashmaps for the types of the event/broadcasts.
 	 contains a linkedQueue (its a linklist style FIFO) of the microservices
@@ -23,6 +23,11 @@ public class MessageBusImpl implements MessageBus {
 	private final ConcurrentHashMap<Class<? extends Broadcast> , ConcurrentLinkedQueue<MicroService>> broadcastsHashmap;
 	private final ConcurrentHashMap<Future<?> , ConcurrentLinkedQueue<MicroService>> futuresHashmap;
 
+
+
+	private static class MsgSingletonHolder {    //private class that make the singleton thread safe
+		private static MessageBusImpl instance = new MessageBusImpl();   //Singelton class
+	}
 
 
 	private MessageBusImpl()
@@ -36,9 +41,7 @@ public class MessageBusImpl implements MessageBus {
 
 	public static MessageBusImpl GetMessageBus()
 	{
-		if (instance == null)
-			instance = new MessageBusImpl();
-		return instance;
+		return MsgSingletonHolder.instance;
 	}
 
 

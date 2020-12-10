@@ -3,6 +3,7 @@ package bgu.spl.mics.application.passiveObjects;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.WeakHashMap;
 
 /**
  * Passive object representing the resource manager.
@@ -17,20 +18,19 @@ public class Ewoks {
     private ArrayList<Ewok> ewokObj = new ArrayList<Ewok>();  // collection of ewok objects  (not sure about the syntax)
     int numberOfEwoks; // we get it from the json
 
-    private static Ewoks instance = null;
+    private static class EwoksSingletonHolder {  // the class that make the singleton thread safe
+        private static Ewoks instance = new Ewoks();
+    }
 
     private Ewoks()
     {
-
         for (int i = 1; i<= numberOfEwoks; i++)  //we get as input the numberOfEwoks
            ewokObj.add(new Ewok(i));
     }
 
     public static Ewoks getInstance()    // make it singelton
     {
-        if (instance == null)
-            instance = new Ewoks();
-        return instance;
+        return EwoksSingletonHolder.instance;
     }
 
 

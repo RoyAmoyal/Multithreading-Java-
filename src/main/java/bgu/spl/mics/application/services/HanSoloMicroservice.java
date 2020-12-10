@@ -3,6 +3,9 @@ package bgu.spl.mics.application.services;
 
 import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.messages.AttackEvent;
+import bgu.spl.mics.application.passiveObjects.Diary;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * HanSoloMicroservices is in charge of the handling {@link AttackEvent}.
@@ -21,6 +24,16 @@ public class HanSoloMicroservice extends MicroService {
 
     @Override
     protected void initialize() {
+
+        /*
+        TimeUnit hanInitTime = TimeUnit.NANOSECONDS;
+
+        Thread h1 = new Thread(() -> {
+            // your code here ...
+        });
+
+        Diary.setHanSoloFinish(((TimeUnit.NANOSECONDS) - hanInitTime)/1000000);
+        /*
 
     }
 }
