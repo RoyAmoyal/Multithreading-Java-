@@ -11,6 +11,7 @@ import java.util.concurrent.LinkedBlockingDeque;
  * Write your implementation here!
  * Only private fields and methods can be added to this class.
  */
+
 public class MessageBusImpl implements MessageBus {
 
 	private static MessageBusImpl instance = null;   //Singelton class
@@ -21,7 +22,7 @@ public class MessageBusImpl implements MessageBus {
 	// DONT FORGET TO CHECK ABOUT THE LINKEDQUEUE MAYBE WE NEED TO CHANGE IT TO DIFFRENT DATA STRUCTURE AND WITHOUT CONCURRUENT
 	private final ConcurrentHashMap<Class<? extends Event<?>>, ConcurrentLinkedQueue<MicroService>> eventsHashmap;
 	private final ConcurrentHashMap<Class<? extends Broadcast> , ConcurrentLinkedQueue<MicroService>> broadcastsHashmap;
-	private final ConcurrentHashMap<Future<?> , ConcurrentLinkedQueue<MicroService>> futuresHashmap;
+	private final ConcurrentHashMap<Event , Future<?>> futuresHashmap;
 
 
 
@@ -40,12 +41,13 @@ public class MessageBusImpl implements MessageBus {
 			instance = new MessageBusImpl();
 		return instance;
 	}
+	/*
 	lei.asubsricbeto danceEvent
 	HASHMAPEVENT:
 	AttackEvent, LISTMICROSERVICE: Han - > c3p0
 	terminateevent, listmicroservice: (han -> c3p0 -> r2d2 -> lando -> leia)
 	dance Event, Listmicroservice: Leia, R2D2
-
+	*/
 	@Override
 	public <T> void subscribeEvent(Class<? extends Event<T>> type, MicroService m) {
 		if(!this.eventsHashmap.containsKey(type)) {
@@ -68,24 +70,40 @@ public class MessageBusImpl implements MessageBus {
 
 	@Override @SuppressWarnings("unchecked")
 	public <T> void complete(Event<T> e, T result) {
-		
+		Future futureToResolve = futuresHashmap.get(e);
+		futureToResolve.resolve(result);
 	}
 
+
 	@Override
-	public void sendBroadcast(Broadcast b) {
-		
+	public void sendBroadcast(Broadcast b)
+	{
+		ConcurrentLinkedQueue<MicroService> subscribedToTheBroadcast = this.broadcastsHashmap.get(b);
+		if(subscribedToTheBroadcast!=null){
+			for(MicroService item: subscribedToTheBroadcast){ //Run over all the elements(microservices) of the list and adds the message to their queues.
+				BlockingQueue<Message> currMessageQueue = microServicesMessageQueuesMap.get(item);
+				currMessageQueue.add(b);
+			}
+		}
 	}
 
 	/* UN FINISHED METHOD WE NEED TO FINISH IT */
 	@Override
 	public <T> Future<T> sendEvent(Event<T> e) {
-		if(!this.eventsHashmap.contains(e))
+		if(!this.eventsHashmap.containsKey(e)) {
 			return null;
-		ConcurrentLinkedQueue<MicroService> currLinkedQueue = this.eventsHashmap.get(e); // Finds the microservices list that subscribed to the type of this event.
+		}
+		/* --------------- The Event Part ----------------- */
+		ConcurrentLinkedQueue<MicroService> currLinkedQueue = this.eventsHashmap.get(e.getClass()); // Finds the microservices list that subscribed to the type of this event.
         MicroService currMicroService = currLinkedQueue.poll(); //removes and returns the head of the list (the microservice that should handle the event in the round-robin)
         BlockingQueue<Message> currMessageQueue = this.microServicesMessageQueuesMap.get(currMicroService); //Finds the MessageQueue for the microservice that need to handle the event.
         currMessageQueue.add(e); // Adds the event to the MessageQueue of that microservice to handle it when possible.
-		return null; // ********* need to handle how to return the future.
+		currLinkedQueue.remove(); //removes the head of the queue each is the currMicroService.
+		currLinkedQueue.add(currMicroService); // adds the currMicroservice to end of the link the subscribedQueue.
+		/* --------------- The Future Part ----------------- */
+		Future newFuture = new Future();
+		this.futuresHashmap.put(e, newFuture); // adds a new future that belong to the event e
+		return newFuture;
 	}
 
 	@Override

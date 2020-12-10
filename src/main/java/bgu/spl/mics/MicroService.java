@@ -26,7 +26,7 @@ public abstract class MicroService implements Runnable {
        private final String name;
        private boolean terminate;
        private final MessageBusImpl messageBuss; // ask students if its suppose to be static or final
-       private final HashMap<Class<? extends Message>,Callback> myCallBacksMap;
+       private final HashMap<Class<? extends Message>,Callback<?>> myCallBacksMap;
 
 
     /**
@@ -37,7 +37,7 @@ public abstract class MicroService implements Runnable {
         this.name = name;
         this.terminate = false;
         this.messageBuss = MessageBusImpl.GetMessageBus();
-        this.myCallBacksMap = new HashMap();
+        this.myCallBacksMap = new HashMap<>();
     }
 
     /**
@@ -134,7 +134,7 @@ public abstract class MicroService implements Runnable {
      *               {@code e}.
      */
     protected final <T> void complete(Event<T> e, T result) {
-    	messageBuss.complete(e,result);
+        messageBuss.complete(e,result);
     }
 
     /**
@@ -155,6 +155,7 @@ public abstract class MicroService implements Runnable {
      *         construction time and is used mainly for debugging purposes.
      */
     public final String getName() {
+
         return this.name;
     }
 
@@ -164,6 +165,17 @@ public abstract class MicroService implements Runnable {
      */
     @Override
     public final void run() {
+        this.messageBuss.register(this);
+        this.initialize();
+        while (true) {
+            try {
+                Message message = this.messageBuss.awaitMessage(this);
+                this.myCallBacksMap.get(message);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
 }

@@ -14,21 +14,21 @@ import java.util.List;
  */
 public class Ewoks {
 
-    private ArrayList<Ewok> ewokObj = new ArrayList<Ewok>();  // collection of ewok objects  (not sure about the syntax)
+    private ArrayList<Ewok> ewok = new ArrayList<Ewok>();  // collection of ewok objects  (not sure about the syntax)
     int numberOfEwoks;
     private static Ewoks instance = null;
 
-    private Ewoks()
+    private Ewoks(int numEwoks)
     {
-
-        for (int i = 1; i<= numberOfEwoks; i++)  //we get as input the numberOfEwoks
-           ewokObj.add(new Ewok(i));
+        this.numberOfEwoks = numEwoks;
+        for (int i = 1; i<= this.numberOfEwoks; i++)  //we get as input the numberOfEwoks
+           this.ewok.add(new Ewok(i));
     }
 
-    public static Ewoks getInstance()    // make it singelton
+    public static Ewoks getInstance(int numEwoks)    // make it singelton
     {
         if (instance == null)
-            instance = new Ewoks();
+            instance = new Ewoks(numEwoks);
         return instance;
     }
 

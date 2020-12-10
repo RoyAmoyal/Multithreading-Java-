@@ -2,11 +2,14 @@ package bgu.spl.mics;
 
 import bgu.spl.mics.application.messages.AttackEvent;
 import bgu.spl.mics.application.messages.TerminateBroadcast;
+import bgu.spl.mics.application.passiveObjects.Attack;
 import bgu.spl.mics.application.services.MockMicroService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -37,7 +40,7 @@ public class MessageBusImplTest{
 
     @Test
     void testComplete() {
-        AttackEvent e1 = new AttackEvent();
+        AttackEvent e1 = new AttackEvent(new Attack(new ArrayList(Arrays.asList(1,3,4)), 100));
         MockMicroService l1 = new MockMicroService();
         MockMicroService h1 = new MockMicroService();
         m1.register(h1);
@@ -87,7 +90,7 @@ public class MessageBusImplTest{
      */
     @Test
     void testSendEvent() {
-        AttackEvent e = new AttackEvent();
+        AttackEvent e = new AttackEvent(new Attack(new ArrayList(Arrays.asList(1,3,4)), 100));
         MockMicroService l1 = new MockMicroService();
         MockMicroService h1 = new MockMicroService();
         m1.register(h1);
@@ -156,7 +159,7 @@ public class MessageBusImplTest{
     @Test
     void testAwaitMessage() {  // Tests only the case where there's a message waiting to be fetched, and makes sure it is indeed fetched.
         MockMicroService h1 = new MockMicroService();    //checking the method on AttackEvent
-        AttackEvent e = new AttackEvent();
+        AttackEvent e = new AttackEvent(new Attack(new ArrayList(Arrays.asList(1,3,4)), 100));
         MockMicroService l1 = new MockMicroService();
 
         m1.register(h1);

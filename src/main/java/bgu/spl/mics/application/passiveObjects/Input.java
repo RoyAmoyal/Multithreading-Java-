@@ -8,8 +8,8 @@ public class Input {
 
 
     private Attack[] attacks;
-    int R2D2;
-    int Lando;
+    long R2D2;
+    long Lando;
     int Ewoks;
 
     public int getEwoks() {
@@ -18,16 +18,16 @@ public class Input {
     public void setEwoks(int ewoks) {
         Ewoks = ewoks;
     }
-    public int getLando() {
+    public long getLando() {
         return Lando;
     }
-    public void setLando(int lando) {
+    public void setLando(long lando) {
         Lando = lando;
     }
-    public int getR2D2() {
+    public long getR2D2() {
         return R2D2;
     }
-    public void setR2D2(int r2d2) {
+    public void setR2D2(long r2d2) {
         R2D2 = r2d2;
     }
     public Attack[] getAttacks() {
