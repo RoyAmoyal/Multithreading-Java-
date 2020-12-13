@@ -37,7 +37,10 @@ public class Ewok {
      * release an Ewok
      */
     public void release() {
-        available = true;
-        notifyAll();
+        synchronized (this) {
+            available = true;
+            this.notifyAll();
+        }
+
     }
 }

@@ -1,10 +1,8 @@
 package bgu.spl.mics;
 import bgu.spl.mics.application.messages.AttackEvent;
+import bgu.spl.mics.application.passiveObjects.Diary;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.*;
 
 /**
  * The {@link MessageBusImpl class is the implementation of the MessageBus interface.
@@ -15,11 +13,7 @@ import java.util.concurrent.LinkedBlockingDeque;
 public class MessageBusImpl implements MessageBus {
 
 	private static MessageBusImpl instance = null;   //Singelton class
-	private final ConcurrentHashMap<MicroService,BlockingQueue<Message>> microServicesMessageQueuesMap;
-	/*Hashmaps for the types of the event/broadcasts.
-	 contains a linkedQueue (its a linklist style FIFO) of the microservices
-	*/
-	// DONT FORGET TO CHECK ABOUT THE LINKEDQUEUE MAYBE WE NEED TO CHANGE IT TO DIFFRENT DATA STRUCTURE AND WITHOUT CONCURRUENT
+	private final ConcurrentHashMap<MicroService, LinkedBlockingQueue<Message>> microServicesMessageQueuesMap;
 	private final ConcurrentHashMap<Class<? extends Event<?>>, ConcurrentLinkedQueue<MicroService>> eventsHashmap;
 	private final ConcurrentHashMap<Class<? extends Broadcast> , ConcurrentLinkedQueue<MicroService>> broadcastsHashmap;
 	private final ConcurrentHashMap<Event , Future<?>> futuresHashmap;
@@ -37,7 +31,7 @@ public class MessageBusImpl implements MessageBus {
 
 	public static MessageBusImpl GetMessageBus()
 	{
-		if (instance == null)
+		if(instance==null)
 			instance = new MessageBusImpl();
 		return instance;
 	}
@@ -81,8 +75,12 @@ public class MessageBusImpl implements MessageBus {
 		ConcurrentLinkedQueue<MicroService> subscribedToTheBroadcast = this.broadcastsHashmap.get(b);
 		if(subscribedToTheBroadcast!=null){
 			for(MicroService item: subscribedToTheBroadcast){ //Run over all the elements(microservices) of the list and adds the message to their queues.
-				BlockingQueue<Message> currMessageQueue = microServicesMessageQueuesMap.get(item);
-				currMessageQueue.add(b);
+				LinkedBlockingQueue<Message> currMessageQueue = microServicesMessageQueuesMap.get(item);
+				try {
+					currMessageQueue.put(b);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
@@ -96,8 +94,12 @@ public class MessageBusImpl implements MessageBus {
 		/* --------------- The Event Part ----------------- */
 		ConcurrentLinkedQueue<MicroService> currLinkedQueue = this.eventsHashmap.get(e.getClass()); // Finds the microservices list that subscribed to the type of this event.
         MicroService currMicroService = currLinkedQueue.poll(); //removes and returns the head of the list (the microservice that should handle the event in the round-robin)
-        BlockingQueue<Message> currMessageQueue = this.microServicesMessageQueuesMap.get(currMicroService); //Finds the MessageQueue for the microservice that need to handle the event.
-        currMessageQueue.add(e); // Adds the event to the MessageQueue of that microservice to handle it when possible.
+		LinkedBlockingQueue<Message> currMessageQueue = this.microServicesMessageQueuesMap.get(currMicroService); //Finds the MessageQueue for the microservice that need to handle the event.
+		try {
+			currMessageQueue.put(e); // Adds the event to the MessageQueue of that microservice to handle it when possible.
+		} catch (InterruptedException interruptedException) {
+			interruptedException.printStackTrace();
+		}
 		currLinkedQueue.add(currMicroService); // adds the currMicroservice to end of the link the subscribedQueue.
 		/* --------------- The Future Part ----------------- */
 		Future newFuture = new Future();
@@ -105,9 +107,10 @@ public class MessageBusImpl implements MessageBus {
 		return newFuture;
 	}
 
+
 	@Override
 	public void register(MicroService m) {
-		BlockingQueue<Message> messageQueue = new LinkedBlockingDeque<>(); // Creates a safety consumer-producer queue with no maximum capacity
+		LinkedBlockingQueue<Message> messageQueue = new LinkedBlockingQueue<>(); // Creates a safety consumer-producer queue with no maximum capacity
 		this.microServicesMessageQueuesMap.put(m,messageQueue); //Puts the message's queue of microservice m on the hashmap, using microservice m as a key in the map.
 	}
 
@@ -118,7 +121,8 @@ public class MessageBusImpl implements MessageBus {
 
 	@Override
 	public Message awaitMessage(MicroService m) throws InterruptedException {
-		BlockingQueue<Message> messageQueue = this.microServicesMessageQueuesMap.get(m);
+		LinkedBlockingQueue<Message> messageQueue = this.microServicesMessageQueuesMap.get(m);
+
 		if(messageQueue==null)
 			throw new IllegalStateException();
 		try {

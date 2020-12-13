@@ -36,7 +36,7 @@ public class C3POMicroservice extends MicroService {
             List<Integer> ewoksSerialsList = attackEvent.getSerials();
             long fightDuration = attackEvent.getDuration();
             Ewoks ewoksList = Ewoks.getInstance();
-            Ewok currEwok;
+            Ewok currEwok = null;
             for (Integer ewokSerialNum : ewoksSerialsList) {
                 currEwok = ewoksList.getEwokObj(ewokSerialNum);
                 currEwok.acquire();

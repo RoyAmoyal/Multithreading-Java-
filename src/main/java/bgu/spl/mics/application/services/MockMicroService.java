@@ -10,8 +10,6 @@ public class MockMicroService extends MicroService{
     }
 
 
-
-
         @Override
         protected void initialize() {
 

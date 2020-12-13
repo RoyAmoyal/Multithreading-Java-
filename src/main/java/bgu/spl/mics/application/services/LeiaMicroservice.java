@@ -38,14 +38,14 @@ public class LeiaMicroservice extends MicroService {
         });
 
     	try{
-    	    Thread.sleep(100); //let han and c3p0 to successfully register.
+    	    Thread.sleep(3000); //let han and c3p0 to successfully register.
         } catch (InterruptedException e) {
         }
     	// Send all the attack events.
     	for(Attack attackItem: attacks){
     	    Future currFuture = null;
     	    while(currFuture == null){
-    	        currFuture = sendEvent(new AttackEvent(attackItem.getSerials(),attackItem.getDuration()));
+    	        currFuture = this.sendEvent(new AttackEvent(attackItem.getSerials(),attackItem.getDuration()));
             }
     	    futureList.add(currFuture);
         }
@@ -54,9 +54,10 @@ public class LeiaMicroservice extends MicroService {
             futureItem.get();
         }
 
+
         Future r2d2Future = null;
         while(r2d2Future==null){
-            r2d2Future = sendEvent(new DeactivationEvent());
+            r2d2Future = this.sendEvent(new DeactivationEvent());
         }
         r2d2Future.get(); //waiting for R2D2 to finish the deactivation
 

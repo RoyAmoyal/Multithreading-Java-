@@ -147,7 +147,8 @@ public abstract class MicroService implements Runnable {
      * message.
      */
     protected final void terminate() {
-    	this.terminate = true;
+        this.terminate = true;
+        Thread.interrupted();
     }
 
     /**
@@ -170,13 +171,13 @@ public abstract class MicroService implements Runnable {
         while (true) {
             try {
                 Message message = this.messageBuss.awaitMessage(this);
-                this.myCallBacksMap.get(message);
+                Callback b = this.myCallBacksMap.get(message.getClass());
+                b.call(message);
 
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
-
     }
 
 }

@@ -43,7 +43,7 @@ public class HanSoloMicroservice extends MicroService {
           List<Integer> ewoksSerialsList = attackEvent.getSerials();
           long fightDuration = attackEvent.getDuration();
           Ewoks ewoksList = Ewoks.getInstance();
-          Ewok currEwok;
+          Ewok currEwok = null;
           for(Integer ewokSerialNum: ewoksSerialsList) { //Acquire all the resources for that attack event.
               currEwok = ewoksList.getEwokObj(ewokSerialNum);
               currEwok.acquire();

@@ -16,6 +16,7 @@ public class Attack {
     /**
      * Constructor.
      */
+
     public Attack(List<Integer> serialNumbers, int duration) {
         this.serials = serialNumbers;
         this.duration = duration;
