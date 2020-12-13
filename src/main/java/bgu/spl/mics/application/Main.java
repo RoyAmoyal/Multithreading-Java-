@@ -28,7 +28,14 @@ public class Main {
 		LandoMicroservice Lando = new LandoMicroservice(input.getLando());
 		/* Creates the passiveObjects */
 		Ewoks ewoks = Ewoks.getInstance(input.getEwoks());
-	}
+		/* Threads */
+		Thread threadLeia = new Thread(Leia);
+		Thread threadHanSolo = new Thread(HanSolo);
+		Thread threadC3P0 = new Thread(C3P0);
+		Thread threadR2D2 = new Thread(R2D2);
+		Thread threadLando = new Thread(Lando);
+
+;	}
 
 	private static Input getInputFromJson(String filePath) throws IOException {
 		Gson gson = new Gson();

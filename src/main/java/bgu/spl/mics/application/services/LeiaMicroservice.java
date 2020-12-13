@@ -5,8 +5,7 @@ import java.util.List;
 
 import bgu.spl.mics.Future;
 import bgu.spl.mics.MicroService;
-import bgu.spl.mics.application.messages.AttackEvent;
-import bgu.spl.mics.application.messages.TerminateBroadcast;
+import bgu.spl.mics.application.messages.*;
 import bgu.spl.mics.application.passiveObjects.Attack;
 import bgu.spl.mics.application.messages.AttackEvent;
 
@@ -34,14 +33,14 @@ public class LeiaMicroservice extends MicroService {
     	    this.terminate();
         });
     	try{
-    	    Thread.sleep(100);
+    	    Thread.sleep(100); //let han and c3p0 to successfully register.
         } catch (InterruptedException e) {
         }
     	// Send all the attack events.
     	for(Attack attackItem: attacks){
     	    Future currFuture = null;
     	    while(currFuture == null){
-    	        currFuture = sendEvent(new AttackEvent(attackItem));
+    	        currFuture = sendEvent(new AttackEvent(attackItem.getSerials(),attackItem.getDuration()));
             }
     	    futureList.add(currFuture);
         }
@@ -50,6 +49,17 @@ public class LeiaMicroservice extends MicroService {
             futureItem.get();
         }
 
+        Future r2d2Future = null;
+        while(r2d2Future==null){
+            r2d2Future = sendEvent(new DeactivationEvent());
+        }
+        r2d2Future.get(); //waiting for R2D2 to finish the deactivation
+
+        Future landoFuture = null;
+        while(landoFuture==null){
+            landoFuture = sendEvent(new BombDestroyerEvent());
+        }
+        landoFuture.get();// waiting for Lando to strike the last finish attack and win the Battle Of Endor
 
     }
 

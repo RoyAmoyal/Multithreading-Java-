@@ -9,6 +9,10 @@ package bgu.spl.mics.application.passiveObjects;
 public class Ewok {
 	int serialNumber;
 	boolean available;
+	/* maybe it will fix the deadlock, cant be sure yet
+	public static boolean state1 = false;
+	public static boolean state2 = false;
+	*/
 
 	public Ewok (int s)    // When we create Ewok its should be available
     {
@@ -20,8 +24,16 @@ public class Ewok {
     /**
      * Acquires an Ewok
      */
-    public void acquire() {
-		available = false;
+    public synchronized void acquire() {
+        while(!this.available)
+        {
+            try
+            {
+                wait();
+            }
+            catch (InterruptedException e) { }
+        }
+        available = false;
     }
 
     /**

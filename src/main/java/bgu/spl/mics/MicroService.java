@@ -171,6 +171,7 @@ public abstract class MicroService implements Runnable {
             try {
                 Message message = this.messageBuss.awaitMessage(this);
                 this.myCallBacksMap.get(message);
+
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

@@ -1,6 +1,8 @@
 package bgu.spl.mics.application.passiveObjects;
 
 
+import javafx.util.Pair;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.WeakHashMap;
@@ -15,7 +17,7 @@ import java.util.WeakHashMap;
  */
 public class Ewoks {
 
-    private ArrayList<Ewok> ewokObj;  // collection of ewok objects  (not sure about the syntax)
+    private List<Ewok> ewokObj;  // collection of ewok objects  (not sure about the syntax)
     private static int numberOfEwoks; // we get it from the json
 
     private static class EwoksSingletonHolder {  // the class that make the singleton thread safe
@@ -25,8 +27,14 @@ public class Ewoks {
     private Ewoks( )
     {
         ewokObj = new ArrayList<>();
-        for (int i = 1; i<= numberOfEwoks; i++)  //we get as input the numberOfEwoks
+        for (int i = 0; i < numberOfEwoks; i++)  //we get as input the numberOfEwoks
            ewokObj.add(new Ewok(i));
+    }
+
+    public Ewok getEwokObj(int i) {
+        if(this.ewokObj.size() < i)
+            throw new IllegalStateException();
+        return this.ewokObj.get(i-1);
     }
 
     public static Ewoks getInstance(int numEwoks)    // make it singelton
@@ -35,7 +43,10 @@ public class Ewoks {
         return EwoksSingletonHolder.instance;
     }
 
-
+    public static Ewoks getInstance()
+    {
+      return EwoksSingletonHolder.instance;
+    }
 
 
 }

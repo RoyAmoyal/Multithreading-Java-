@@ -40,7 +40,7 @@ public class MessageBusImplTest{
 
     @Test
     void testComplete() {
-        AttackEvent e1 = new AttackEvent(new Attack(new ArrayList(Arrays.asList(1,3,4)), 100));
+        AttackEvent e1 = new AttackEvent(new ArrayList<Integer>(Arrays.asList(1,2)),100);
         MockMicroService l1 = new MockMicroService();
         MockMicroService h1 = new MockMicroService();
         m1.register(h1);
@@ -90,7 +90,7 @@ public class MessageBusImplTest{
      */
     @Test
     void testSendEvent() {
-        AttackEvent e = new AttackEvent(new Attack(new ArrayList(Arrays.asList(1,3,4)), 100));
+        AttackEvent e = new AttackEvent(new ArrayList<Integer>(Arrays.asList(1,2)),100);
         MockMicroService l1 = new MockMicroService();
         MockMicroService h1 = new MockMicroService();
         m1.register(h1);
@@ -159,7 +159,7 @@ public class MessageBusImplTest{
     @Test
     void testAwaitMessage() {  // Tests only the case where there's a message waiting to be fetched, and makes sure it is indeed fetched.
         MockMicroService h1 = new MockMicroService();    //checking the method on AttackEvent
-        AttackEvent e = new AttackEvent(new Attack(new ArrayList(Arrays.asList(1,3,4)), 100));
+        AttackEvent e = new AttackEvent(new ArrayList<Integer>(Arrays.asList(1,2)),100);
         MockMicroService l1 = new MockMicroService();
 
         m1.register(h1);
