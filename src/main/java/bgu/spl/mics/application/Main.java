@@ -35,6 +35,14 @@ public class Main {
 		Thread threadR2D2 = new Thread(R2D2);
 		Thread threadLando = new Thread(Lando);
 
+		threadLando.start();
+		threadR2D2.start();
+		threadHanSolo.start();
+		threadC3P0.start();
+		threadLeia.start();
+
+
+
 ;	}
 
 	private static Input getInputFromJson(String filePath) throws IOException {
@@ -55,38 +63,36 @@ public class Main {
 
 
 // <----------input ---------->
-		if(args.length!=2) {
+		if (args.length != 2) {
 			System.out.println("No valid input arguments were given");
 			System.out.println("Please provide valid input.json path and output.json path");
 			return; //exit main
 		}
 		String inputFilePath = args[0]; //input file path from arguments
 		String outputFilePath = args[1];//output file path from arguments
-		Input input=null;
-		try{
-			input= getInputFromJson(inputFilePath);
-		}
-		catch (IOException e) {
+		Input input = null;
+		try {
+			input = getInputFromJson(inputFilePath);
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		// <----------input ---------->
 
 		// <--------main program ---------->
-		if(input!=null)
-		 battleOfEndor(input);// - the method that runs all the threads and the program.
+		if (input != null)
+			battleOfEndor(input);// - the method that runs all the threads and the program.
 		// <--------main program ---------->
 
 		// <----------output ---------->
-	//	Diary recordDiary = Diary.getInstance();
-		//try {
-		//	diaryToJson(outputFilePath,recordDiary);
-		//} catch (IOException e) {
-	//		e.printStackTrace();
-		//}
+		Diary recordDiary = Diary.getInstance();
+		try {
+			diaryToJson(outputFilePath, recordDiary);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		// <----------output ---------->
 
-
-
-
 	}
+
+
 }

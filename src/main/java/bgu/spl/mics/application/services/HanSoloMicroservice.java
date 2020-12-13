@@ -35,6 +35,7 @@ public class HanSoloMicroservice extends MicroService {
     @Override
     protected void initialize() {
         this.subscribeBroadcast(TerminateBroadcast.class, (TerminateBroadcast terminateBroadcast) -> {
+            System.out.println("HanSolo: Never tell me the odds!");
             this.terminate();
         });
 
@@ -43,14 +44,21 @@ public class HanSoloMicroservice extends MicroService {
           long fightDuration = attackEvent.getDuration();
           Ewoks ewoksList = Ewoks.getInstance();
           Ewok currEwok;
-          for(Integer ewokSerialNum: ewoksSerialsList) {
+          for(Integer ewokSerialNum: ewoksSerialsList) { //Acquire all the resources for that attack event.
               currEwok = ewoksList.getEwokObj(ewokSerialNum);
               currEwok.acquire();
           }
           // after han succeed get all the resources we needs
           try {
-              Thread.sleep(100); // sleep = execute as "Done"
+              Thread.sleep(fightDuration); // sleep = execute the attack event for the fight duration
           }catch (InterruptedException e){}
+          System.out.println("Han: Im done with the attackevent: " + attackEvent);
+          this.complete(attackEvent,true);
+
+          for(Integer ewokSerialNum: ewoksSerialsList) { //Release all the resources for that attack event.
+              currEwok = ewoksList.getEwokObj(ewokSerialNum);
+              currEwok.release();
+          }
 
 
 

@@ -20,7 +20,10 @@ import bgu.spl.mics.application.messages.AttackEvent;
 public class LeiaMicroservice extends MicroService {
 	private Attack[] attacks;
 	private final ArrayList<Future> futureList;
-	
+
+
+
+
     public LeiaMicroservice(Attack[] attacks) {
         super("Leia");
 		this.attacks = attacks;
@@ -30,8 +33,10 @@ public class LeiaMicroservice extends MicroService {
     @Override
     protected void initialize() {
     	this.subscribeBroadcast(TerminateBroadcast.class, (TerminateBroadcast terminateBroadcast) -> {
+    	    System.out.println("Leia: Hope is not lost today. It is found");
     	    this.terminate();
         });
+
     	try{
     	    Thread.sleep(100); //let han and c3p0 to successfully register.
         } catch (InterruptedException e) {
@@ -60,6 +65,8 @@ public class LeiaMicroservice extends MicroService {
             landoFuture = sendEvent(new BombDestroyerEvent());
         }
         landoFuture.get();// waiting for Lando to strike the last finish attack and win the Battle Of Endor
+
+        this.sendBroadcast(new TerminateBroadcast());
 
     }
 

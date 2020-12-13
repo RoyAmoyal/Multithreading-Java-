@@ -90,7 +90,7 @@ public class MessageBusImpl implements MessageBus {
 	/* UN FINISHED METHOD WE NEED TO FINISH IT */
 	@Override
 	public <T> Future<T> sendEvent(Event<T> e) {
-		if(!this.eventsHashmap.containsKey(e)) {
+		if(!this.eventsHashmap.containsKey(e.getClass())) {
 			return null;
 		}
 		/* --------------- The Event Part ----------------- */
@@ -98,7 +98,6 @@ public class MessageBusImpl implements MessageBus {
         MicroService currMicroService = currLinkedQueue.poll(); //removes and returns the head of the list (the microservice that should handle the event in the round-robin)
         BlockingQueue<Message> currMessageQueue = this.microServicesMessageQueuesMap.get(currMicroService); //Finds the MessageQueue for the microservice that need to handle the event.
         currMessageQueue.add(e); // Adds the event to the MessageQueue of that microservice to handle it when possible.
-		currLinkedQueue.remove(); //removes the head of the queue each is the currMicroService.
 		currLinkedQueue.add(currMicroService); // adds the currMicroservice to end of the link the subscribedQueue.
 		/* --------------- The Future Part ----------------- */
 		Future newFuture = new Future();

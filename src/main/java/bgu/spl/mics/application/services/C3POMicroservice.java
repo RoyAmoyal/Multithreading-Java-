@@ -27,6 +27,7 @@ public class C3POMicroservice extends MicroService {
     protected void initialize()
     {
         this.subscribeBroadcast(TerminateBroadcast.class, (TerminateBroadcast terminateBroadcast) -> {
+            System.out.println("C3P0: It's times like this that I really feel like shutting down.");
             this.terminate();
         });
 
@@ -42,8 +43,18 @@ public class C3POMicroservice extends MicroService {
             }
             // after han succeed get all the resources we needs
             try {
-                Thread.sleep(100); // sleep = execute as "Done"
+                Thread.sleep(fightDuration); //sleep = execute the attack event for the fight duration
             } catch (InterruptedException e) {}
+            System.out.println("C3P0: Im done with the attackevent: " + attackEvent);
+            this.complete(attackEvent,true);
+
+            for(Integer ewokSerialNum: ewoksSerialsList) { //Release all the resources for that attack event.
+                currEwok = ewoksList.getEwokObj(ewokSerialNum);
+                currEwok.release();
+            }
+
+
+
          });
 
     }

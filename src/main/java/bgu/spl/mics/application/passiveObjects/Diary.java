@@ -21,6 +21,19 @@ public class Diary {
    private long R2D2Terminate;
    private long LandoTerminate;
 
+    private static class DiarySingletonHolder {  // the class that make the singleton thread safe
+        private static Diary instance = new Diary();
+    }
+
+    private Diary(){
+    };
+
+    public static Diary getInstance()
+    {
+        return Diary.DiarySingletonHolder.instance;
+    }
+
+
 
 
    //            --------     Lest start with the setters  ------------
