@@ -24,21 +24,21 @@ public class R2D2Microservice extends MicroService {
     @Override
     protected void initialize() {
         this.subscribeBroadcast(TerminateBroadcast.class, (TerminateBroadcast terminateBroadcast) -> {
-            System.out.println("R2D2: Bleep, Bloop, Beep, Boop!");
-            this.terminate();
+                this.terminate();
         });
 
-        this.subscribeEvent(DeactivationEvent.class, (DeactivationEvent deactivationEvent) -> {
-                try{
-                    Thread.sleep(this.deActivationDuration); // Deactivate the sheild generator.
-                }
-                catch (InterruptedException e){}
+        this.subscribeEvent(DeactivationEvent.class,
+                (DeactivationEvent d) -> {
+                    try{
+                        Thread.sleep(this.deActivationDuration); // Deactivate the sheild generator.
+                    }
+                    catch (InterruptedException ignored){
+                    }
+                    this.complete(d,true);
+                    System.out.println("R2D2: Bep , Bop, BEEP BEPP!" + "\n" + "C3P0-Translation-Of-R2D2: The shield generator is Off!");
 
-                System.out.println("R2D2: Bep , Bop, BEEP BEPP! - C3P0-Translation: The shield generator is Off!");
-                this.complete(deactivationEvent,true);
-
                 }
-                );
+        );
 
 
     }

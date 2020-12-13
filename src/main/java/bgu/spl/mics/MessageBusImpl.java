@@ -72,7 +72,7 @@ public class MessageBusImpl implements MessageBus {
 	@Override
 	public void sendBroadcast(Broadcast b)
 	{
-		ConcurrentLinkedQueue<MicroService> subscribedToTheBroadcast = this.broadcastsHashmap.get(b);
+		ConcurrentLinkedQueue<MicroService> subscribedToTheBroadcast = this.broadcastsHashmap.get(b.getClass());
 		if(subscribedToTheBroadcast!=null){
 			for(MicroService item: subscribedToTheBroadcast){ //Run over all the elements(microservices) of the list and adds the message to their queues.
 				LinkedBlockingQueue<Message> currMessageQueue = microServicesMessageQueuesMap.get(item);
@@ -126,7 +126,7 @@ public class MessageBusImpl implements MessageBus {
 		if(messageQueue==null)
 			throw new IllegalStateException();
 		try {
-			Message message = messageQueue.take(); // take() method of BlockingQueue is a blocking method that wait for new element in the queue if the queue is empty.
+			Message message = messageQueue.take();
 			return message;
 		} catch (InterruptedException e) { throw new InterruptedException(m + ".awaitMessage got interrupted while waiting for a message");}
 

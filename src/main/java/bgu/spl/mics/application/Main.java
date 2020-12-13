@@ -41,9 +41,14 @@ public class Main {
 		threadC3P0.start();
 		threadLeia.start();
 
-
-
-;	}
+		/* WE HAVE TO CHECK ABOUT THE TERMINATION I HAVE NO IDEA HOW WE SUPPOSE TO TERMINATE THEM LOL
+		threadC3P0.interrupt();
+		threadHanSolo.interrupt();
+		threadLando.interrupt();
+		threadR2D2.interrupt();
+		threadLeia.interrupt();
+		*/
+	}
 
 	private static Input getInputFromJson(String filePath) throws IOException {
 		Gson gson = new Gson();

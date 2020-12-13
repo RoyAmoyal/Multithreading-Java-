@@ -36,8 +36,16 @@ public class Future<T> {
      * 	       
      */
 	public T get() {
-
-		while (!isDone()){}        //return the result when its available
+		synchronized (this){
+		while (!isDone()) {
+			try {
+				this.wait();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		}
+		//return the result when its available
 		return result;
 
 	}
@@ -46,14 +54,17 @@ public class Future<T> {
      * Resolves the result of this Future object.
      */
 	public void resolve (T result) {
-		this.result = result;
-		this.isDone = true;
+		synchronized (this) {
+			this.result = result;
+			this.isDone = true;
+			notifyAll();
+		}
 	}
 	
 	/**
      * @return true if this object has been resolved, false otherwise
      */
-	public boolean isDone() {
+	public synchronized boolean isDone() {
 		return isDone;
 	}
 	

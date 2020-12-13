@@ -24,13 +24,14 @@ public class LandoMicroservice  extends MicroService {
             this.terminate();
         });
 
+
         this.subscribeEvent(BombDestroyerEvent.class, (BombDestroyerEvent bombDestroyerEvent) -> {
                     try {
                         Thread.sleep(this.bombDestroyerDuration); // Deactivate the sheild generator.
                     }
                     catch (InterruptedException e) {}
 
-                    System.out.println("Lando: You know, that ship’s saved my life quite a few times. She’s the fastest hunk o’ junk in the galaxy!");
+                    System.out.println("Lando: You know, that ship’s saved my life quite a few times." + "\n       " + "She’s the fastest hunk o’ junk in the galaxy!");
                     this.complete(bombDestroyerEvent, true);
                 }
         );

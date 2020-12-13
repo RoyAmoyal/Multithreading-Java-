@@ -41,21 +41,23 @@ public class LeiaMicroservice extends MicroService {
     	    Thread.sleep(3000); //let han and c3p0 to successfully register.
         } catch (InterruptedException e) {
         }
-    	// Send all the attack events.
+        System.out.println("------------Fight's Quotes:------------");
+
+        // Send all the attack events.
     	for(Attack attackItem: attacks){
-    	    Future currFuture = null;
+    	    Future<Boolean> currFuture = null;
     	    while(currFuture == null){
     	        currFuture = this.sendEvent(new AttackEvent(attackItem.getSerials(),attackItem.getDuration()));
             }
     	    futureList.add(currFuture);
         }
     	// check if all futures are resolved. if they dont then wait by using the Future.get() blocking method.
-        for(Future futureItem: futureList){
+        for(Future<Boolean> futureItem: futureList){
             futureItem.get();
         }
 
 
-        Future r2d2Future = null;
+        Future<Boolean> r2d2Future = null;
         while(r2d2Future==null){
             r2d2Future = this.sendEvent(new DeactivationEvent());
         }
@@ -66,7 +68,7 @@ public class LeiaMicroservice extends MicroService {
             landoFuture = sendEvent(new BombDestroyerEvent());
         }
         landoFuture.get();// waiting for Lando to strike the last finish attack and win the Battle Of Endor
-
+        System.out.println("------------Termination's Quotes:------------");
         this.sendBroadcast(new TerminateBroadcast());
 
     }
