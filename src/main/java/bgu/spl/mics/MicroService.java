@@ -1,6 +1,5 @@
 package bgu.spl.mics;
 
-import sun.jvm.hotspot.runtime.Thread;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,7 +37,7 @@ public abstract class MicroService implements Runnable {
     public MicroService(String name) {
         this.name = name;
         this.terminate = false;
-        this.messageBuss = MessageBusImpl.GetMessageBus();
+        this.messageBuss = MessageBusImpl.GetMessageBusInstance();
         this.myCallBacksMap = new ConcurrentHashMap<>();
     }
 
@@ -150,7 +149,6 @@ public abstract class MicroService implements Runnable {
      */
     protected final void terminate() {
         this.terminate = true;
-        System.out.println(this);
     }
 
     /**
@@ -175,12 +173,11 @@ public abstract class MicroService implements Runnable {
                 Message message = this.messageBuss.awaitMessage(this);
                 Callback b = this.myCallBacksMap.get(message.getClass());
                 b.call(message);
-
             } catch (InterruptedException e) {
-
                 //e.printStackTrace();
             }
         }
+
     }
 
 }

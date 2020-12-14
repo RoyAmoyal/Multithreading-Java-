@@ -41,13 +41,16 @@ public class Main {
 		threadC3P0.start();
 		threadLeia.start();
 
-		/* WE HAVE TO CHECK ABOUT THE TERMINATION I HAVE NO IDEA HOW WE SUPPOSE TO TERMINATE THEM LOL
-		threadC3P0.interrupt();
-		threadHanSolo.interrupt();
-		threadLando.interrupt();
-		threadR2D2.interrupt();
-		threadLeia.interrupt();
-		*/
+		try {
+			threadC3P0.join();
+			threadHanSolo.join();
+			threadLando.join();
+			threadR2D2.join();
+			threadLeia.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	private static Input getInputFromJson(String filePath) throws IOException {
@@ -67,8 +70,8 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 
 
-// <----------input ---------->
 		if (args.length != 2) {
+// <----------input ---------->
 			System.out.println("No valid input arguments were given");
 			System.out.println("Please provide valid input.json path and output.json path");
 			return; //exit main

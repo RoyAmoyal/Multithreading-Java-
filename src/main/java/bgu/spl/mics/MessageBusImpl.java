@@ -1,6 +1,7 @@
 package bgu.spl.mics;
 import bgu.spl.mics.application.messages.AttackEvent;
 import bgu.spl.mics.application.passiveObjects.Diary;
+import bgu.spl.mics.application.passiveObjects.Ewoks;
 
 import java.util.concurrent.*;
 
@@ -12,13 +13,15 @@ import java.util.concurrent.*;
 
 public class MessageBusImpl implements MessageBus {
 
-	private static MessageBusImpl instance = null;   //Singelton class
+
 	private final ConcurrentHashMap<MicroService, LinkedBlockingQueue<Message>> microServicesMessageQueuesMap;
 	private final ConcurrentHashMap<Class<? extends Event<?>>, ConcurrentLinkedQueue<MicroService>> eventsHashmap;
 	private final ConcurrentHashMap<Class<? extends Broadcast> , ConcurrentLinkedQueue<MicroService>> broadcastsHashmap;
 	private final ConcurrentHashMap<Event , Future<?>> futuresHashmap;
 
-
+	private static class MsgBusSingletonHolder {  // the class that make the singleton thread safe
+		private static MessageBusImpl instance = new MessageBusImpl();
+	}
 
 	private MessageBusImpl()
 	{
@@ -29,12 +32,11 @@ public class MessageBusImpl implements MessageBus {
 	}
 
 
-	public static MessageBusImpl GetMessageBus()
+	public static MessageBusImpl GetMessageBusInstance()
 	{
-		if(instance==null)
-			instance = new MessageBusImpl();
-		return instance;
+		return MsgBusSingletonHolder.instance;
 	}
+
 	/*
 	lei.asubsricbeto danceEvent
 	HASHMAPEVENT:
@@ -43,7 +45,7 @@ public class MessageBusImpl implements MessageBus {
 	dance Event, Listmicroservice: Leia, R2D2
 	*/
 	@Override
-	public <T> void subscribeEvent(Class<? extends Event<T>> type, MicroService m) {
+	public <T> void subscribeEvent(Class<? extends Event<T>> type, MicroService m) {  //maybe need synchronized
 		if(!this.eventsHashmap.containsKey(type)) {
 			ConcurrentLinkedQueue<MicroService> newLinkedQueue = new ConcurrentLinkedQueue<>();
 			this.eventsHashmap.put(type,newLinkedQueue);
@@ -54,9 +56,11 @@ public class MessageBusImpl implements MessageBus {
 
 	@Override
 	public void subscribeBroadcast(Class<? extends Broadcast> type, MicroService m) {
-		if(!broadcastsHashmap.containsKey(type)) {
-			ConcurrentLinkedQueue<MicroService> newLinkedQueue = new ConcurrentLinkedQueue<>();
-			broadcastsHashmap.put(type,newLinkedQueue);
+		synchronized(this){
+			if(!broadcastsHashmap.containsKey(type)) {
+				ConcurrentLinkedQueue<MicroService> newLinkedQueue = new ConcurrentLinkedQueue<>();
+				broadcastsHashmap.put(type,newLinkedQueue);
+			}
 		}
 		ConcurrentLinkedQueue<MicroService> currLinkedQueue = broadcastsHashmap.get(type);
 		currLinkedQueue.add(m);
@@ -102,8 +106,8 @@ public class MessageBusImpl implements MessageBus {
 		}
 		currLinkedQueue.add(currMicroService); // adds the currMicroservice to end of the link the subscribedQueue.
 		/* --------------- The Future Part ----------------- */
-		Future newFuture = new Future();
-		this.futuresHashmap.put(e, newFuture); // adds a new future that belong to the event e
+		Future<T> newFuture = new Future<T>();
+		this.futuresHashmap.put(e , newFuture); // adds a new future that belong to the event e
 		return newFuture;
 	}
 

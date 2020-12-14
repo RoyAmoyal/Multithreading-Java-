@@ -8,6 +8,7 @@ import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.messages.*;
 import bgu.spl.mics.application.passiveObjects.Attack;
 import bgu.spl.mics.application.messages.AttackEvent;
+import bgu.spl.mics.application.passiveObjects.Diary;
 
 /**
  * LeiaMicroservices Initialized with Attack objects, and sends them as  {@link AttackEvent}.
@@ -32,8 +33,10 @@ public class LeiaMicroservice extends MicroService {
 
     @Override
     protected void initialize() {
+        long startLeia = System.currentTimeMillis();
     	this.subscribeBroadcast(TerminateBroadcast.class, (TerminateBroadcast terminateBroadcast) -> {
-    	    System.out.println("Leia: Hope is not lost today. It is found");
+    	    System.out.println("Leia: Hope is not lost today. It is found!");
+            Diary.getInstance().setLeiaTerminate(System.currentTimeMillis());
     	    this.terminate();
         });
 
@@ -42,7 +45,6 @@ public class LeiaMicroservice extends MicroService {
         } catch (InterruptedException e) {
         }
         System.out.println("------------Fight's Quotes:------------");
-
         // Send all the attack events.
     	for(Attack attackItem: attacks){
     	    Future<Boolean> currFuture = null;
@@ -51,6 +53,7 @@ public class LeiaMicroservice extends MicroService {
             }
     	    futureList.add(currFuture);
         }
+
     	// check if all futures are resolved. if they dont then wait by using the Future.get() blocking method.
         for(Future<Boolean> futureItem: futureList){
             futureItem.get();

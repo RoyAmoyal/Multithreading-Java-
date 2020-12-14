@@ -1,6 +1,10 @@
 package bgu.spl.mics.application.passiveObjects;
 
 
+import bgu.spl.mics.application.messages.AttackEvent;
+
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * Passive data-object representing a Diary - in which the flow of the battle is recorded.
  * We are going to compare your recordings with the expected recordings, and make sure that your output makes sense.
@@ -9,17 +13,28 @@ package bgu.spl.mics.application.passiveObjects;
  */
 public class Diary {
 
-   private int TotalAttacks; // we can use AtomicInteger for this
 
-   private long HanSoloFinish;    // We can use  System.currentTimeMillis(). for all this 8 methods
-   private long C3POFinish;
-   private long R2D2Deactivated;
+
+   private long HanSoloFinish = 0;    // We can use  System.currentTimeMillis(). for all this 8 methods
+   private long C3POFinish = 0;
+   private long R2D2Deactivated = 0;
 
    private long LeiaTerminate;
    private long HanSoloTerminate;
    private long C3POTerminate;
    private long R2D2Terminate;
    private long LandoTerminate;
+
+
+    private AtomicInteger TotalAttacks = new AtomicInteger(); //init to 0
+
+    public void increment()
+    {
+        TotalAttacks.getAndIncrement();  // its like i++
+    }
+
+
+
 
     private static class DiarySingletonHolder {  // the class that make the singleton thread safe
         private static Diary instance = new Diary();
@@ -39,7 +54,7 @@ public class Diary {
    //            --------     Lest start with the setters  ------------
 
 
-    public void setTotalAttacks(int totalAttacks) {    //lets decide that Han will count.
+    public void setTotalAttacks(AtomicInteger totalAttacks) {    //lets decide that Han will count.
         TotalAttacks = totalAttacks;
     }
 
@@ -84,7 +99,7 @@ public class Diary {
     //            -------     getters ze hadibur ------
 
 
-    public int getTotalAttacks() {
+    public AtomicInteger getTotalAttacks() {
         return TotalAttacks;
     }
 

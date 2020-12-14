@@ -15,6 +15,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * HanSoloMicroservices is in charge of the handling {@link AttackEvent}.
@@ -32,14 +33,20 @@ public class HanSoloMicroservice extends MicroService {
 
 
 
+
     @Override
     protected void initialize() {
+
+
+
         this.subscribeBroadcast(TerminateBroadcast.class, (TerminateBroadcast terminateBroadcast) -> {
             System.out.println("HanSolo: Never tell me the odds!");
+            Diary.getInstance().setHanSoloTerminate(System.currentTimeMillis());
             this.terminate();
         });
 
       this.subscribeEvent(AttackEvent.class,(AttackEvent attackEvent) -> {
+          long startHan = System.currentTimeMillis();
           List<Integer> ewoksSerialsList = attackEvent.getSerials();
           long fightDuration = attackEvent.getDuration();
           Ewoks ewoksList = Ewoks.getInstance();
@@ -52,6 +59,8 @@ public class HanSoloMicroservice extends MicroService {
           try {
               Thread.sleep(fightDuration); // sleep = execute the attack event for the fight duration
           }catch (InterruptedException e){}
+
+          Diary.getInstance().setHanSoloFinish( Diary.getInstance().getHanSoloFinish()  +  System.currentTimeMillis() - startHan);
           System.out.println("Han: Im done with the attackevent: " + attackEvent);
           this.complete(attackEvent,true);
 
@@ -60,19 +69,10 @@ public class HanSoloMicroservice extends MicroService {
               currEwok.release();
           }
 
+          Diary.getInstance().increment();
+
       });
 
-
-
-
-
-           /*
-        TimeUnit hanInitTime = TimeUnit.NANOSECONDS;
-        Thread h1 = new Thread(() -> {
-            // your code here ...
-        });
-        Diary.setHanSoloFinish(((TimeUnit.NANOSECONDS) - hanInitTime)/1000000);
-        */
 
     }
 }

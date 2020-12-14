@@ -21,7 +21,7 @@ public class MessageBusImplTest{
 
     @BeforeEach
     void setUp() {
-        m1 = MessageBusImpl.GetMessageBus();
+        m1 = MessageBusImpl.GetMessageBusInstance();
     }
 
     @AfterEach
@@ -67,6 +67,15 @@ public class MessageBusImplTest{
         MockMicroService l1 = new MockMicroService();
         MockMicroService h1 = new MockMicroService();
         m1.register(h1);
+        m1.register(l1);
+
+        l1.subscribeBroadcast(TerminateBroadcast.class , (TerminateBroadcast call) -> { new Callback<TerminateBroadcast>()
+        {
+            @Override
+            public void call(TerminateBroadcast c){}
+        };
+        });
+
         h1.subscribeBroadcast(TerminateBroadcast.class , (TerminateBroadcast call) -> { new Callback<TerminateBroadcast>()
         {
             @Override
@@ -81,7 +90,15 @@ public class MessageBusImplTest{
         }
         catch (InterruptedException exception){
         }
+
+        try{
+            Message msg2 = m1.awaitMessage(l1);
+            assertEquals(b,msg2);
+        }
+        catch (InterruptedException exception){
+        }
     }
+
 
     /* In this test we check the functionally of the methods subscribeEvent and sendEvent of MessageBus because the
          implementation of microservice.subscribeEvent event and microservice.sendEvent

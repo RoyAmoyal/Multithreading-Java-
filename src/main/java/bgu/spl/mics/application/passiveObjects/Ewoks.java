@@ -1,11 +1,8 @@
 package bgu.spl.mics.application.passiveObjects;
 
 
-import javafx.util.Pair;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.WeakHashMap;
 
 /**
  * Passive object representing the resource manager.
@@ -24,7 +21,7 @@ public class Ewoks {
         private static Ewoks instance = new Ewoks();
     }
 
-    private Ewoks( )
+    private Ewoks()
     {
         ewokObj = new ArrayList<>();
         for (int i = 0; i < numberOfEwoks; i++)  //we get as input the numberOfEwoks

@@ -91,7 +91,6 @@ public class Future<T> {
 			while (System.nanoTime() < end)
 				if(isDone())
 					return result;
-
 			return null;
 	}
 

@@ -5,6 +5,7 @@ import bgu.spl.mics.MicroService;
 import java.util.HashMap;
 import bgu.spl.mics.application.messages.DeactivationEvent;
 import bgu.spl.mics.application.messages.TerminateBroadcast;
+import bgu.spl.mics.application.passiveObjects.Diary;
 
 /**
  * R2D2Microservices is in charge of the handling {@link DeactivationEvent}.
@@ -23,17 +24,23 @@ public class R2D2Microservice extends MicroService {
 //998371158
     @Override
     protected void initialize() {
+
         this.subscribeBroadcast(TerminateBroadcast.class, (TerminateBroadcast terminateBroadcast) -> {
-                this.terminate();
+                System.out.println("R2D2: BLEP BLOP DONE");
+            Diary.getInstance().setR2D2Terminate(System.currentTimeMillis());
+                this.terminate();    // We want all Terminate together, no?
         });
 
         this.subscribeEvent(DeactivationEvent.class,
                 (DeactivationEvent d) -> {
+                    long startR2 = System.currentTimeMillis();
                     try{
-                        Thread.sleep(this.deActivationDuration); // Deactivate the sheild generator.
+                        Thread.sleep(this.deActivationDuration); // Deactivate the shield generator.
                     }
                     catch (InterruptedException ignored){
                     }
+
+                    Diary.getInstance().setR2D2Deactivated( Diary.getInstance().getR2D2Deactivated() + System.currentTimeMillis() - startR2);
                     this.complete(d,true);
                     System.out.println("R2D2: Bep , Bop, BEEP BEPP!" + "\n" + "C3P0-Translation-Of-R2D2: The shield generator is Off!");
 
