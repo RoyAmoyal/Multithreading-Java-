@@ -1,14 +1,10 @@
 package bgu.spl.mics.application;
 
-import bgu.spl.mics.MicroService;
-import bgu.spl.mics.application.messages.AttackEvent;
 import bgu.spl.mics.application.passiveObjects.Diary;
 import bgu.spl.mics.application.passiveObjects.Ewoks;
 import bgu.spl.mics.application.passiveObjects.Input;
 import bgu.spl.mics.application.services.*;
 import com.google.gson.Gson;
-import com.google.gson.stream.JsonReader;
-import jdk.nashorn.internal.parser.JSONParser;
 
 import java.io.*;
 
@@ -71,10 +67,9 @@ public class Main {
 
 
 		if (args.length != 2) {
-// <----------input ---------->
 			System.out.println("No valid input arguments were given");
 			System.out.println("Please provide valid input.json path and output.json path");
-			return; //exit main
+			return;
 		}
 		String inputFilePath = args[0]; //input file path from arguments
 		String outputFilePath = args[1];//output file path from arguments
@@ -84,21 +79,16 @@ public class Main {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		// <----------input ---------->
 
-		// <--------main program ---------->
 		if (input != null)
 			battleOfEndor(input);// - the method that runs all the threads and the program.
-		// <--------main program ---------->
 
-		// <----------output ---------->
 		Diary recordDiary = Diary.getInstance();
 		try {
 			diaryToJson(outputFilePath, recordDiary);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		// <----------output ---------->
 
 	}
 

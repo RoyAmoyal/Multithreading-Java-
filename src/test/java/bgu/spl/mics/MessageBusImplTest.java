@@ -1,8 +1,8 @@
 package bgu.spl.mics;
 
 import bgu.spl.mics.application.messages.AttackEvent;
+import bgu.spl.mics.application.messages.BombDestroyerEvent;
 import bgu.spl.mics.application.messages.TerminateBroadcast;
-import bgu.spl.mics.application.passiveObjects.Attack;
 import bgu.spl.mics.application.services.MockMicroService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -100,8 +99,8 @@ public class MessageBusImplTest{
     }
 
 
-    /* In this test we check the functionally of the methods subscribeEvent and sendEvent of MessageBus because the
-         implementation of microservice.subscribeEvent event and microservice.sendEvent
+    /* In this test we check the functionally of the methods subscribeEvent and sendEvent and register of MessageBus because the
+         implementation of microservice.subscribeEvent event and microservice.sendEvent and microservice.register
          are using the MessageBus subscribeEvent and sendEvent methods.
          In addition, the test for subscribeEvent method is contained in this test because they identical.
      */
@@ -116,17 +115,19 @@ public class MessageBusImplTest{
             public void call(AttackEvent c){}
          };
         });
+
         Future<Boolean> f2 = l1.sendEvent(e);
+
         if(f2 == null)
             fail("sendEvent has returned null but there is a MicroService that has subscribed to the type of that event");
 
         try{
             Message msg = m1.awaitMessage(h1);
-            assertEquals(msg,e);
+            assertEquals(e,msg);
         }
         catch (InterruptedException exception){
         }
-
+        assertNotEquals(null,f2);
     }
 
 
@@ -152,8 +153,11 @@ public class MessageBusImplTest{
 
         //Tests the scenario when the microservice has registered.
         m1.register(h1);
+        m1.subscribeEvent(BombDestroyerEvent.class,h1);
         try {
-            m1.awaitMessage(h1);
+            BombDestroyerEvent b1 = new BombDestroyerEvent();
+            m1.sendEvent(b1);
+            assertEquals(b1,m1.awaitMessage(h1));
             //Success
         }
         catch(IllegalStateException e)
@@ -176,13 +180,13 @@ public class MessageBusImplTest{
     @Test
     void testAwaitMessage() {  // Tests only the case where there's a message waiting to be fetched, and makes sure it is indeed fetched.
         MockMicroService h1 = new MockMicroService();    //checking the method on AttackEvent
-        AttackEvent e = new AttackEvent(new ArrayList<Integer>(Arrays.asList(1,2)),100);
+        BombDestroyerEvent e = new BombDestroyerEvent();
         MockMicroService l1 = new MockMicroService();
 
         m1.register(h1);
-       h1.subscribeEvent(AttackEvent.class , (AttackEvent call) -> { new Callback<AttackEvent>() { // checks the subscribe event.
+       h1.subscribeEvent(BombDestroyerEvent.class , (BombDestroyerEvent call) -> { new Callback<BombDestroyerEvent>() { // checks the subscribe event.
             @Override
-            public void call(AttackEvent c){}
+            public void call(BombDestroyerEvent c){}
          };
         });
 
@@ -190,7 +194,7 @@ public class MessageBusImplTest{
 
         try {
            Message m = m1.awaitMessage(h1);
-            assertEquals(m,e);
+            assertEquals(e,m);
         }
         catch (InterruptedException i){}
 

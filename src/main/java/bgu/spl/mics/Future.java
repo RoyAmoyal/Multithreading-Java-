@@ -40,16 +40,14 @@ public class Future<T> {
 		while (!isDone()) {
 			try {
 				this.wait();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+			} catch (InterruptedException e) {}
 		}
 		}
 		//return the result when its available
 		return result;
-
 	}
-	
+
+
 	/**
      * Resolves the result of this Future object.
      */

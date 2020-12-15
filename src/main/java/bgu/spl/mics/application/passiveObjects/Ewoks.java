@@ -24,7 +24,7 @@ public class Ewoks {
     private Ewoks()
     {
         ewokObj = new ArrayList<>();
-        for (int i = 0; i < numberOfEwoks; i++)
+        for (int i = 1; i <= numberOfEwoks; i++)
            ewokObj.add(new Ewok(i));
     }
 

@@ -12,7 +12,7 @@ public class EwokTest {
 
     @BeforeEach
     void setUp() {
-        Ewok e1 = new Ewok(14);
+        e1 = new Ewok(14);
 
     }
 

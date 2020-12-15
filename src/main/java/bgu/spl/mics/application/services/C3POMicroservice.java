@@ -49,10 +49,11 @@ public class C3POMicroservice extends MicroService {
             try {
                 Thread.sleep(fightDuration); //sleep = execute the attack event for the fight duration
             } catch (InterruptedException e) {}
+
             long test =  System.currentTimeMillis() - startC3;
             Diary.getInstance().setC3POFinish( Diary.getInstance().getC3POFinish()  +  System.currentTimeMillis() - startC3);
             System.out.println("C3P0: Im done with the attackevent: " + attackEvent);
-          //  System.out.println("The time for that attack event is " + test);
+
             this.complete(attackEvent,true);
 
             for(Integer ewokSerialNum: ewoksSerialsList) { //Release all the resources for that attack event.
