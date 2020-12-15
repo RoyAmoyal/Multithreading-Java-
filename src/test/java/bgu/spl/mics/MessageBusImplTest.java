@@ -203,5 +203,4 @@ public class MessageBusImplTest{
 
         m1.unregister(h3);
     }
-
 }

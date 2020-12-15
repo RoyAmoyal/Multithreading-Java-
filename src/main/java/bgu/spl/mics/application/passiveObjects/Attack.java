@@ -28,8 +28,6 @@ public class Attack {
     }
 
 
-                            //-- Option one --
-
     public List<Integer> getSerials()
     {
         return serials;

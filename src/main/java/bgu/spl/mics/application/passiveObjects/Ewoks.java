@@ -14,11 +14,12 @@ import java.util.List;
  */
 public class Ewoks {
 
-    private List<Ewok> ewokObj;
+    private ArrayList<Ewok> ewokObj;
     private static int numberOfEwoks;
 
     private static class EwoksSingletonHolder {
         private static Ewoks instance = new Ewoks();
+
     }
 
     private Ewoks()
@@ -28,11 +29,13 @@ public class Ewoks {
            ewokObj.add(new Ewok(i));
     }
 
+
     public Ewok getEwokObj(int i) {
         if(this.ewokObj.size() < i)
             throw new IllegalStateException();
         return this.ewokObj.get(i-1);
     }
+
 
     public static Ewoks getInstance(int numEwoks)
     {
@@ -44,6 +47,9 @@ public class Ewoks {
     {
       return EwoksSingletonHolder.instance;
     }
+
+
+
 
 
 }

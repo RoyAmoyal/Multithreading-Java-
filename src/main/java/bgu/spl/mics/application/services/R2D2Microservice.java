@@ -19,7 +19,7 @@ public class R2D2Microservice extends MicroService {
         super("R2D2");
         this.deActivationDuration = duration;
     }
-//998371158
+
     @Override
     protected void initialize() {
 

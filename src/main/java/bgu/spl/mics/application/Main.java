@@ -46,8 +46,7 @@ public class Main {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-
-	}
+ }
 
 	private static Input getInputFromJson(String filePath) throws IOException {
 		Gson gson = new Gson();
@@ -67,12 +66,13 @@ public class Main {
 
 
 		if (args.length != 2) {
-			System.out.println("No valid input arguments were given");
-			System.out.println("Please provide valid input.json path and output.json path");
+			System.out.println("invalid input arguments");
+			System.out.println("invalid input.json path and output.json path");
 			return;
 		}
 		String inputFilePath = args[0]; //input file path from arguments
 		String outputFilePath = args[1];//output file path from arguments
+
 		Input input = null;
 		try {
 			input = getInputFromJson(inputFilePath);
@@ -88,7 +88,8 @@ public class Main {
 			diaryToJson(outputFilePath, recordDiary);
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		};
+
 
 	}
 
