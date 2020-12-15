@@ -1,6 +1,7 @@
 package bgu.spl.mics;
 
 
+import java.util.Map;
 import java.util.concurrent.*;
 
 /**
@@ -113,8 +114,21 @@ public class MessageBusImpl implements MessageBus {
 
 	@Override
 	public void unregister(MicroService m) {
+		for(Map.Entry<Class<? extends Event<?>>, ConcurrentLinkedQueue<MicroService>> item: this.eventsHashmap.entrySet()) {
+			ConcurrentLinkedQueue<MicroService> currLinkedQueue = item.getValue();
+			if(currLinkedQueue.contains(m))
+				currLinkedQueue.remove(m);
+		}
+		for(Map.Entry<Class<? extends Broadcast> , ConcurrentLinkedQueue<MicroService>> item: this.broadcastsHashmap.entrySet()) {
+			ConcurrentLinkedQueue<MicroService> currLinkedQueue = item.getValue();
+			if(currLinkedQueue.contains(m))
+				currLinkedQueue.remove(m);
+		}
+
 		this.microServicesMessageQueuesMap.remove(m);
 	}
+
+
 
 	@Override
 	public Message awaitMessage(MicroService m) throws InterruptedException {

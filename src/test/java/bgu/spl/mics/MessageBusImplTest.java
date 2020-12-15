@@ -52,7 +52,7 @@ public class MessageBusImplTest{
         h1.complete(e1,true);
             assertTrue(f1.isDone());     //checks if the complete resolved the future value.
         assertEquals(true , f1.get()); //checks if the resolved value is the true value result that expected on the complete method
-
+        m1.unregister(h1);
     }
 
     /* In this test we check the functionally of the methods subscribeBroadcast and sendBroadcast of MessageBus because the
@@ -96,6 +96,8 @@ public class MessageBusImplTest{
         }
         catch (InterruptedException exception){
         }
+        m1.unregister(h1);
+        m1.unregister(l1);
     }
 
 
@@ -116,10 +118,10 @@ public class MessageBusImplTest{
          };
         });
 
-        Future<Boolean> f2 = l1.sendEvent(e);
+       Future<Boolean> f2 = l1.sendEvent(e);
 
-        if(f2 == null)
-            fail("sendEvent has returned null but there is a MicroService that has subscribed to the type of that event");
+       if(f2 == null)
+           fail("sendEvent has returned null but there is a MicroService that has subscribed to the type of that event");
 
         try{
             Message msg = m1.awaitMessage(h1);
@@ -127,7 +129,7 @@ public class MessageBusImplTest{
         }
         catch (InterruptedException exception){
         }
-        assertNotEquals(null,f2);
+        m1.unregister(h1);
     }
 
 
@@ -169,6 +171,7 @@ public class MessageBusImplTest{
         catch(InterruptedException i){
             // Success
         }
+        m1.unregister(h1);
 
     }
 
@@ -179,12 +182,12 @@ public class MessageBusImplTest{
 
     @Test
     void testAwaitMessage() {  // Tests only the case where there's a message waiting to be fetched, and makes sure it is indeed fetched.
-        MockMicroService h1 = new MockMicroService();    //checking the method on AttackEvent
+        MockMicroService h3 = new MockMicroService();    //checking the method on AttackEvent
         BombDestroyerEvent e = new BombDestroyerEvent();
         MockMicroService l1 = new MockMicroService();
 
-        m1.register(h1);
-       h1.subscribeEvent(BombDestroyerEvent.class , (BombDestroyerEvent call) -> { new Callback<BombDestroyerEvent>() { // checks the subscribe event.
+        m1.register(h3);
+       h3.subscribeEvent(BombDestroyerEvent.class , (BombDestroyerEvent call) -> { new Callback<BombDestroyerEvent>() { // checks the subscribe event.
             @Override
             public void call(BombDestroyerEvent c){}
          };
@@ -193,10 +196,12 @@ public class MessageBusImplTest{
         l1.sendEvent(e);
 
         try {
-           Message m = m1.awaitMessage(h1);
+           Message m = m1.awaitMessage(h3);
             assertEquals(e,m);
         }
         catch (InterruptedException i){}
 
+        m1.unregister(h3);
     }
+
 }
