@@ -1,8 +1,6 @@
 package bgu.spl.mics.application.services;
 
 import bgu.spl.mics.MicroService;
-
-import java.util.HashMap;
 import bgu.spl.mics.application.messages.DeactivationEvent;
 import bgu.spl.mics.application.messages.TerminateBroadcast;
 import bgu.spl.mics.application.passiveObjects.Diary;
@@ -28,7 +26,7 @@ public class R2D2Microservice extends MicroService {
         this.subscribeBroadcast(TerminateBroadcast.class, (TerminateBroadcast terminateBroadcast) -> {
                 System.out.println("R2D2: BLEP BLOP DONE");
             Diary.getInstance().setR2D2Terminate(System.currentTimeMillis());
-                this.terminate();    // We want all Terminate together, no?
+                this.terminate();
         });
 
         this.subscribeEvent(DeactivationEvent.class,

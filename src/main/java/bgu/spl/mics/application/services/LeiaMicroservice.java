@@ -1,8 +1,6 @@
 package bgu.spl.mics.application.services;
 
 import java.util.ArrayList;
-import java.util.List;
-
 import bgu.spl.mics.Future;
 import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.messages.*;
@@ -54,7 +52,7 @@ public class LeiaMicroservice extends MicroService {
     	    futureList.add(currFuture);
         }
 
-    	// check if all futures are resolved. if they dont then wait by using the Future.get() blocking method.
+
         for(Future<Boolean> futureItem: futureList){
             futureItem.get();
         }

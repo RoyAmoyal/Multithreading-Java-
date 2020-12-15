@@ -1,8 +1,6 @@
 package bgu.spl.mics.application.passiveObjects;
 
 
-import bgu.spl.mics.application.messages.AttackEvent;
-
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**

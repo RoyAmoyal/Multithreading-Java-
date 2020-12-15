@@ -1,8 +1,5 @@
 package bgu.spl.mics;
 
-
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -26,7 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public abstract class MicroService implements Runnable {
        private final String name;
        private boolean terminate;
-       private final MessageBusImpl messageBuss; // ask students if its suppose to be static or final
+       private final MessageBusImpl messageBuss;
        private final ConcurrentHashMap<Class<? extends Message>,Callback> myCallBacksMap;
 
 
@@ -63,11 +60,9 @@ public abstract class MicroService implements Runnable {
      *                 queue.
      */
     protected final <T, E extends Event<T>> void subscribeEvent(Class<E> type, Callback<E> callback) {
-            messageBuss.subscribeEvent(type, this); // The microservice is subscribing to the event
+            messageBuss.subscribeEvent(type, this);
             myCallBacksMap.put(type, callback);
-            /* Hashmap to get the callback faster when needed.
-               The "keys" of the Hashmap Structure are the types of the event and the callbacks are the values.
-             we only have one callback for each type of event so it makes sense */
+
 
     }
 
@@ -92,7 +87,7 @@ public abstract class MicroService implements Runnable {
      *                 queue.
      */
     protected final <B extends Broadcast> void subscribeBroadcast(Class<B> type, Callback<B> callback) {
-        messageBuss.subscribeBroadcast(type,this); //using messageBus sub
+        messageBuss.subscribeBroadcast(type,this);
         myCallBacksMap.put(type,callback);
     }
 
@@ -111,7 +106,7 @@ public abstract class MicroService implements Runnable {
      */
     protected final <T> Future<T> sendEvent(Event<T> e) {
     	Future<T> futureToResolved = messageBuss.sendEvent(e);
-        return futureToResolved; // we have to make sure msgbus.sendevent returns null if no microserivce has subsribed to the the type of the event
+        return futureToResolved;
     }
 
     /**

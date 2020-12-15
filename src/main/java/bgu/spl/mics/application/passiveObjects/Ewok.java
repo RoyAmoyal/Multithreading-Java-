@@ -10,7 +10,7 @@ public class Ewok {
 	int serialNumber;
 	boolean available;
 
-	public Ewok (int s)    // When we create Ewok its should be available
+	public Ewok (int s)
     {
         serialNumber = s;
         available = true;

@@ -1,7 +1,5 @@
 package bgu.spl.mics;
-import bgu.spl.mics.application.messages.AttackEvent;
-import bgu.spl.mics.application.passiveObjects.Diary;
-import bgu.spl.mics.application.passiveObjects.Ewoks;
+
 
 import java.util.concurrent.*;
 
@@ -19,7 +17,7 @@ public class MessageBusImpl implements MessageBus {
 	private final ConcurrentHashMap<Class<? extends Broadcast> , ConcurrentLinkedQueue<MicroService>> broadcastsHashmap;
 	private final ConcurrentHashMap<Event , Future<?>> futuresHashmap;
 
-	private static class MsgBusSingletonHolder {  // the class that make the singleton thread safe
+	private static class MsgBusSingletonHolder {
 		private static MessageBusImpl instance = new MessageBusImpl();
 	}
 
@@ -39,7 +37,7 @@ public class MessageBusImpl implements MessageBus {
 
 
 	@Override
-	public <T> void subscribeEvent(Class<? extends Event<T>> type, MicroService m) {  //maybe need synchronized
+	public <T> void subscribeEvent(Class<? extends Event<T>> type, MicroService m) {
 		synchronized(this) {
 		if(!this.eventsHashmap.containsKey(type)) {
 			ConcurrentLinkedQueue<MicroService> newLinkedQueue = new ConcurrentLinkedQueue<>();

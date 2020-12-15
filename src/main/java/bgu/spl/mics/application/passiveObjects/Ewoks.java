@@ -14,17 +14,17 @@ import java.util.List;
  */
 public class Ewoks {
 
-    private List<Ewok> ewokObj;  // collection of ewok objects  (not sure about the syntax)
-    private static int numberOfEwoks; // we get it from the json
+    private List<Ewok> ewokObj;
+    private static int numberOfEwoks;
 
-    private static class EwoksSingletonHolder {  // the class that make the singleton thread safe
+    private static class EwoksSingletonHolder {
         private static Ewoks instance = new Ewoks();
     }
 
     private Ewoks()
     {
         ewokObj = new ArrayList<>();
-        for (int i = 0; i < numberOfEwoks; i++)  //we get as input the numberOfEwoks
+        for (int i = 0; i < numberOfEwoks; i++)
            ewokObj.add(new Ewok(i));
     }
 
@@ -34,7 +34,7 @@ public class Ewoks {
         return this.ewokObj.get(i-1);
     }
 
-    public static Ewoks getInstance(int numEwoks)    // make it singelton
+    public static Ewoks getInstance(int numEwoks)
     {
         numberOfEwoks = numEwoks;
         return EwoksSingletonHolder.instance;

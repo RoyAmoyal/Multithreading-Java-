@@ -8,7 +8,7 @@ import bgu.spl.mics.application.passiveObjects.Ewoks;
 import bgu.spl.mics.application.passiveObjects.Diary;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
+
 
 
 /**
@@ -28,9 +28,6 @@ public class C3POMicroservice extends MicroService {
     @Override
     protected void initialize()
     {
-
-        AtomicInteger atomicIntegerC3 = new AtomicInteger();
-
         this.subscribeBroadcast(TerminateBroadcast.class, (TerminateBroadcast terminateBroadcast) -> {
             System.out.println("C3P0: It's times like this that I really feel like shutting down.");
             Diary.getInstance().setC3POTerminate(System.currentTimeMillis());

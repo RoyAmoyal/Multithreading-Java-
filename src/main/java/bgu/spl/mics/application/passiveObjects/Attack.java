@@ -35,18 +35,4 @@ public class Attack {
         return serials;
     }
 
-                       //-- Option two --
-
-    public int getEwokReq()   //we get Serial number to initialize a Ewok
-    {
-        List<Integer> l = serials;
-        int i = serials.get(0);
-        serials.remove(0);
-        return i;
-
-    }
-
-
-
-
 }
