@@ -15,7 +15,7 @@ public class Diary {
 
 
 
-   private long HanSoloFinish = 0;    // We can use  System.currentTimeMillis(). for all this 8 methods
+   private long HanSoloFinish = 0;
    private long C3POFinish = 0;
    private long R2D2Deactivated = 0;
 
@@ -36,7 +36,7 @@ public class Diary {
 
 
 
-    private static class DiarySingletonHolder {  // the class that make the singleton thread safe
+    private static class DiarySingletonHolder {
         private static Diary instance = new Diary();
     }
 
@@ -46,7 +46,7 @@ public class Diary {
     public static Diary getInstance()
     {
         return Diary.DiarySingletonHolder.instance;
-    }
+    } //instance will create here
 
 
 
@@ -96,7 +96,7 @@ public class Diary {
 
 
 
-    //            -------     getters ze hadibur ------
+    //            -------     getters  ------
 
 
     public AtomicInteger getTotalAttacks() {

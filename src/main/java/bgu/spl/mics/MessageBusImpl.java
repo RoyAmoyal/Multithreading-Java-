@@ -34,22 +34,17 @@ public class MessageBusImpl implements MessageBus {
 
 	public static MessageBusImpl GetMessageBusInstance()
 	{
-		return MsgBusSingletonHolder.instance;
+		return MsgBusSingletonHolder.instance;  //only here the instance will create
 	}
 
-	/*
-	lei.asubsricbeto danceEvent
-	HASHMAPEVENT:
-	AttackEvent, LISTMICROSERVICE: Han - > c3p0
-	terminateevent, listmicroservice: (han -> c3p0 -> r2d2 -> lando -> leia)
-	dance Event, Listmicroservice: Leia, R2D2
-	*/
+
 	@Override
 	public <T> void subscribeEvent(Class<? extends Event<T>> type, MicroService m) {  //maybe need synchronized
+		synchronized(this) {
 		if(!this.eventsHashmap.containsKey(type)) {
 			ConcurrentLinkedQueue<MicroService> newLinkedQueue = new ConcurrentLinkedQueue<>();
 			this.eventsHashmap.put(type,newLinkedQueue);
-		}
+		}}
 		ConcurrentLinkedQueue<MicroService> currLinkedQueue = eventsHashmap.get(type);
 		currLinkedQueue.add(m);
 	}
@@ -89,7 +84,7 @@ public class MessageBusImpl implements MessageBus {
 		}
 	}
 
-	/* UN FINISHED METHOD WE NEED TO FINISH IT */
+
 	@Override
 	public <T> Future<T> sendEvent(Event<T> e) {
 		if(!this.eventsHashmap.containsKey(e.getClass())) {

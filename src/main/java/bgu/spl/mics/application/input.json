@@ -6,10 +6,10 @@
     },
     {
       "duration" : 1000,
-      "serials" : [2,1]
+      "serials" : [3,4]
     },
     {
-      "duration" : 2000,
+      "duration" : 1000,
       "serials" : [2,1,3]
     }
   ,
