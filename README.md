@@ -7,3 +7,4 @@ In this assignment, we learned about **Multi-Threading** in Java.
 
 1) Singelton design pattern
 2) Communication between threads
+3) Deadlocks and livelocks
