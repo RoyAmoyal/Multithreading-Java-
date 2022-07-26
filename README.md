@@ -1,7 +1,7 @@
 # About the project
 
-This project was an assignment in the course "System Programmnig Language".
-In this assignment we learned about **Multi-Theading** in Java.
+This project was an assignment in the course "System Programming Language".
+In this assignment, we learned about **Multi-Threading** in Java.
 
 ## Other stuff that we learned
 
